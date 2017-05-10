@@ -34,3 +34,4 @@ Fonctionnalité: Visiter un lieu proche contenant des vitraux
       Et elle lui fournit le chemin le plus court pour y accéder
       Et elle lui fournit la distance et le temps de trajet
 
+
