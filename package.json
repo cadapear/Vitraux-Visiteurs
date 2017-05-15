@@ -4,5 +4,12 @@
   "devDependencies": {
     "grunt": "^1.0.1",
     "grunt-contrib-uglify": "^1.0.1"
+  },
+  "dependencies": {
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.2.1",
+    "list.js": "^1.5.0",
+    "ratchet-npm": "^2.0.4",
+    "roboto-fontface": "^0.7.0"
   }
 }
