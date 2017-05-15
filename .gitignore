@@ -1,3 +1,5 @@
 /bower_components/
 /nbproject/
 /node_modules/
+npm-debug.log
+.DS_Store
