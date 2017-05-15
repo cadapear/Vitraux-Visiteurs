@@ -14,25 +14,14 @@ and history of stained-glass windows in Troyes, France.
 
 ## Setting up the development environment
 
-1. [Install Bower](http://bower.io/#install-bower)
+1. [Install Node.js](http://bower.io/#install-bower)
 2. Open command line
 3. Go to project root folder
 4. Run the following command to install project dependencies:
 
 ```
-bower install
+npm install
 ```
-
-## Adding packages as dependencies
-
-You can search packages [here](https://bower.io/search/) and install them with the following command:
-
-```
-bower install <package> --save
-```
-
-Care to know more about Bower? [Bower docs](http://bower.io/docs/api/)
-
 
 ## Using Grunt
 
