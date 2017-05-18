@@ -1,0 +1,27 @@
+.table-img {
+    width: 100px;
+}
+.table-view {
+    margin-top: 0!important;
+}
+.stained-glass-desc {
+    float:right;
+    width: 50%;
+
+}
+.stained-glass-img {
+    float:left;
+    width: 50%;
+    text-align: center;
+}
+
+.place-info {
+    padding-top: 15px;
+    padding-right: 15px;
+    .place-name {
+        text-align: center;
+    }
+    p {
+        text-align: justify;
+    }
+}
