@@ -1,23 +1,23 @@
 import React from 'react';
 import { Switch, Link, Route } from 'react-router-dom';
 
-import Home from './pages/Home.jsx';
+import Dashboard from './pages/Dashboard.jsx';
 import Path from './pages/Path.jsx';
+import Badge from './pages/Badge.jsx';
+import History from './pages/History.jsx';
+import StainedGlass from './pages/StainedGlass.jsx';
 
 export default class App extends React.Component {
 
   render() {
     return (
       <div>
-        <nav>
-          <ul>
-            <li><Link to='/'>Dashboard</Link></li>
-            <li><Link to='/path'>Parcours</Link></li>
-          </ul>
-        </nav>
         <Switch>
-          <Route exact path='/' component={Home}/>
+          <Route exact path='/' component={Dashboard}/>
           <Route path='/path' component={Path}/>
+          <Route path='/badge' component={Badge}/>
+          <Route path='/history' component={History}/>
+          <Route path='/stained-glass' component={StainedGlass}/>
         </Switch>
       </div>
     );

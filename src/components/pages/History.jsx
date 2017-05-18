@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export default class Path extends React.Component {
+export default class History extends React.Component {
 
   render() {
     return (
       <div>
-        path page <br />
+        History page <br />
         <Link to='/'>Dashboard</Link>
       </div>
     )
