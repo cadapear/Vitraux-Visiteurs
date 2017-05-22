@@ -44,5 +44,11 @@ module.exports = {
     plugins: [
         HtmlWebpackPluginConfig,
         new ExtractTextPlugin('style.css')
-    ]
+    ],
+    node: {
+        console: false,
+        fs: 'empty',
+        net: 'empty',
+        tls: 'empty'
+    }
 };
