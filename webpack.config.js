@@ -41,6 +41,10 @@ module.exports = {
             },
         ]
     },
+    devServer: {
+        historyApiFallback: true,
+        disableHostCheck: true
+    },
     plugins: [
         HtmlWebpackPluginConfig,
         new ExtractTextPlugin('style.css')

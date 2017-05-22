@@ -1,9 +1,11 @@
 import React from 'react';
 
+import RaisedButton from 'material-ui/RaisedButton';
+
 import {viewpoints, corpusArgos, APIs} from '../../config/constants';
 
+// hypertopic
 const hypertopic = require('hypertopic');
-
 const db = hypertopic(APIs);
 
 export default class Path extends React.Component {
@@ -15,6 +17,8 @@ export default class Path extends React.Component {
             viewpoints: [],
             corpus: []
         };
+
+        this._showMyPath = this._showMyPath.bind(this);
     }
 
     componentDidMount() {
@@ -53,10 +57,18 @@ export default class Path extends React.Component {
         });
     }
 
+    /**
+     * Redirect the user to the page where he can see the details of his path
+     */
+    _showMyPath() {
+        this.props.history.push('/mypath');
+    }
+
     render() {
         return (
             <div>
-                 Path page
+                <h1>Création de votre parcours</h1>
+                <RaisedButton label="Voir mon parcours" secondary={true} onClick={this._showMyPath} />
             </div>
         )
     }

@@ -1,7 +1,9 @@
 import React from 'react';
-import { Switch, Link, Route } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 
 import Path from './pages/Path.jsx';
+import MyPath from './pages/MyPath.jsx';
+import AppBar from 'material-ui/AppBar';
 
 require('../style/main.scss');
 
@@ -10,12 +12,14 @@ export default class App extends React.Component {
     render() {
         return (
             <div>
-                <header className="bar bar-nav">
-                    <h1 className="title">Vitraux Visiteurs <span id="courses-num" className="badge">0</span></h1>
-                </header>
+                <AppBar
+                    title="Vitraux Visiteurs"
+                    iconClassNameRight="muidocs-icon-navigation-expand-more"
+                />
                 <div className="app-container">
                     <Switch>
-                        <Route exact path='/' component={Path}/>
+                        <Route exact path='/' component={Path} />
+                        <Route exact path='/mypath' component={MyPath} />
                     </Switch>
                 </div>
             </div>

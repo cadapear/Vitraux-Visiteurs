@@ -19,3 +19,7 @@ export const APIs = [
     "http://argos2.hypertopic.org",
     "http://steatite.hypertopic.org"
 ];
+
+export const localStorageNames = {
+    myPath: "myPath"
+};
