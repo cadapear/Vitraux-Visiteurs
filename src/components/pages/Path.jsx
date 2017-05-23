@@ -1,4 +1,5 @@
-import React from 'react';
+import React from 'react'
+import { Link } from 'react-router-dom';
 
 import RaisedButton from 'material-ui/RaisedButton';
 
@@ -151,11 +152,14 @@ export default class Path extends React.Component {
 
     render() {
         const topics = this.state.topics;
+
+        // get the topic at the top of the stack, or null if the stack is empty
         const currentTopic = this.state.currentTopicStack.length ? this.state.currentTopicStack[this.state.currentTopicStack.length - 1]: null;
 
         return (
             <div>
                 <h1>Création de votre parcours</h1>
+                <Link to='/'>Dashboard</Link>
                 <RaisedButton label="Voir mon parcours" secondary={true} onClick={this._showMyPath} />
                 <RaisedButton label="Retour" primary={true} onClick={this._navigateBack} />
                 {

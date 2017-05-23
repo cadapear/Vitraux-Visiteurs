@@ -1,9 +1,14 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
+import AppBar from 'material-ui/AppBar';
+
 import Path from './pages/Path.jsx';
 import MyPath from './pages/MyPath.jsx';
-import AppBar from 'material-ui/AppBar';
+import Dashboard from './pages/Dashboard.jsx';
+import Badge from './pages/Badge.jsx';
+import History from './pages/History.jsx';
+import StainedGlass from './pages/StainedGlass.jsx';
 
 require('../style/main.scss');
 
@@ -18,8 +23,12 @@ export default class App extends React.Component {
                 />
                 <div className="app-container">
                     <Switch>
-                        <Route exact path='/' component={Path} />
-                        <Route exact path='/mypath' component={MyPath} />
+                        <Route exact path='/' component={Dashboard}/>
+                        <Route path='/path' component={Path}/>
+                        <Route path='/mypath' component={MyPath} />
+                        <Route path='/badge' component={Badge}/>
+                        <Route path='/history' component={History}/>
+                        <Route path='/stained-glass' component={StainedGlass}/>
                     </Switch>
                 </div>
             </div>
