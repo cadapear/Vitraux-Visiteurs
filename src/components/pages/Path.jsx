@@ -1,7 +1,10 @@
 import React from 'react'
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'
 
 import RaisedButton from 'material-ui/RaisedButton';
+
+import PathTopic from '../Topic/PathTopic.jsx';
+import PathStainedGlass from '../StainedGlass/PathStainedGlass.jsx';
 
 import {viewpoints, corpusArgos, APIs} from '../../config/constants';
 
@@ -163,19 +166,19 @@ export default class Path extends React.Component {
                 <RaisedButton label="Voir mon parcours" secondary={true} onClick={this._showMyPath} />
                 <RaisedButton label="Retour" primary={true} onClick={this._navigateBack} />
                 {
-                    <ul>
-                        {
-                            currentTopic
-                            ?
-                                topics[currentTopic].narrowers.map((topic, i) => {
-                                    return <li onClick={_ => this._navigateThoughTopic(topic)} key={i}>{topic + ` (${topics[topic] ? topics[topic].narrowers.length : 0})`}</li>
-                                })
-                            :
-                                Object.keys(topics)
-                                    .filter(topic => topics[topic].narrowers.length !== 0)
-                                    .map((topic, i) => <li onClick={_ => this._navigateThoughTopic(topic)} key={i}>{topic + ` (${topics[topic].narrowers.length})`}</li>)
-                        }
-                    </ul>
+                    currentTopic
+                    ?
+                        topics[currentTopic].narrowers.map((topic, i) => {
+                            return topics[topic]
+                                ?
+                                    <PathTopic onClick={_ => this._navigateThoughTopic(topic)} key={i} topic={topic} narrowers={topics[topic].narrowers.length} />
+                                :
+                                    <PathStainedGlass key={i} stainedGlassName={topic} />
+                        })
+                    :
+                        Object.keys(topics)
+                            .filter(topic => topics[topic].narrowers.length !== 0)
+                            .map((topic, i) => <PathTopic onClick={_ => this._navigateThoughTopic(topic)} key={i} topic={topic} narrowers={topics[topic].narrowers.length} />)
                 }
             </div>
         )
