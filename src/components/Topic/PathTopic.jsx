@@ -20,8 +20,13 @@ export default class PathTopic extends React.Component {
 
     render() {
         return (
-            <div onClick={this.props.onClick}>
-                {`${this.state.topic} [${this.state.narrowers}]`}
+            <div>
+                <div onClick={this.props.navigate}>
+                    {`${this.state.topic} [${this.state.narrowers}]`}
+                </div>
+                <div onClick={this.props.addToMyPath}>
+                    +
+                </div>
             </div>
         );
     }

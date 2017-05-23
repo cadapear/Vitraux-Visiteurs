@@ -1,6 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
+import PathService from '../../services/PathService';
+
 import RaisedButton from 'material-ui/RaisedButton';
 
 import PathTopic from '../Topic/PathTopic.jsx';
@@ -28,6 +30,8 @@ export default class Path extends React.Component {
         this._showMyPath = this._showMyPath.bind(this);
         this._navigateBack = this._navigateBack.bind(this);
         this._navigateThoughTopic = this._navigateThoughTopic.bind(this);
+        this._addToMyPath = this._addToMyPath.bind(this);
+        this._getSubTopics = this._getSubTopics.bind(this);
     }
 
     componentDidMount() {
@@ -153,6 +157,36 @@ export default class Path extends React.Component {
         this.props.history.push('/mypath');
     }
 
+    /**
+     *
+     * @param {string} topic
+     */
+    _addToMyPath(topic) {
+        PathService.add(topic, this._getSubTopics(topic));
+    }
+
+    /**
+     * Get all the subtopic of the given topic
+     * @param {string} topic
+     * @returns {Array}
+     */
+    _getSubTopics(topic) {
+        let topics = [];
+        let queue = this.state.topics[topic] && this.state.topics[topic].narrowers ? this.state.topics[topic].narrowers : [];
+
+        let el = queue.shift();
+        while (el) {
+            console.log(el);
+            topics.push(el);
+            const narrowers = this.state.topics[el] && this.state.topics[el].narrowers ? this.state.topics[el].narrowers : [];
+            queue = queue.concat(narrowers);
+
+            el = queue.shift();
+        }
+
+        return topics;
+    }
+
     render() {
         const topics = this.state.topics;
 
@@ -171,14 +205,14 @@ export default class Path extends React.Component {
                         topics[currentTopic].narrowers.map((topic, i) => {
                             return topics[topic]
                                 ?
-                                    <PathTopic onClick={_ => this._navigateThoughTopic(topic)} key={i} topic={topic} narrowers={topics[topic].narrowers.length} />
+                                    <PathTopic navigate={_ => this._navigateThoughTopic(topic)} addToMyPath={_ => this._addToMyPath(topic)} key={i} topic={topic} narrowers={topics[topic].narrowers.length} />
                                 :
-                                    <PathStainedGlass key={i} stainedGlassName={topic} />
+                                    <PathStainedGlass addToMyPath={_ => this._addToMyPath(topic)} key={i} stainedGlassName={topic} />
                         })
                     :
                         Object.keys(topics)
                             .filter(topic => topics[topic].narrowers.length !== 0)
-                            .map((topic, i) => <PathTopic onClick={_ => this._navigateThoughTopic(topic)} key={i} topic={topic} narrowers={topics[topic].narrowers.length} />)
+                            .map((topic, i) => <PathTopic navigate={_ => this._navigateThoughTopic(topic)} addToMyPath={_ => this._addToMyPath(topic)} key={i} topic={topic} narrowers={topics[topic].narrowers.length} />)
                 }
             </div>
         )

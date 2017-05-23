@@ -16,8 +16,13 @@ export default class PathStainedGlass extends React.Component {
 
     render() {
         return (
-            <div onClick={this.props.onClick}>
-                {this.state.stainedGlassName}
+            <div>
+                <div>
+                    {this.state.stainedGlassName}
+                </div>
+                <div onClick={this.props.addToMyPath}>
+                    +
+                </div>
             </div>
         );
     }
