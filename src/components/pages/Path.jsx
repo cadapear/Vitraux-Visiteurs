@@ -31,6 +31,7 @@ export default class Path extends React.Component {
         this._navigateBack = this._navigateBack.bind(this);
         this._navigateThoughTopic = this._navigateThoughTopic.bind(this);
         this._addToMyPath = this._addToMyPath.bind(this);
+        this._getStainedGlasses = this._getStainedGlasses.bind(this);
         this._getSubTopics = this._getSubTopics.bind(this);
     }
 
@@ -162,7 +163,30 @@ export default class Path extends React.Component {
      * @param {string} topic
      */
     _addToMyPath(topic) {
-        PathService.add(topic, this._getSubTopics(topic));
+        PathService.add(topic, this._getSubTopics(topic), this._getStainedGlasses(topic));
+    }
+
+    /**
+     * Get all the stained glasses of the given topic
+     * @param {string} topic
+     * @returns {Array}
+     */
+    _getStainedGlasses(topic) {
+        let stainedGlasses = [];
+        let queue = this.state.topics[topic] && this.state.topics[topic].narrowers ? this.state.topics[topic].narrowers.slice() : [];
+
+        let el = queue.shift();
+        while (el) {
+            const narrowers = this.state.topics[el] && this.state.topics[el].narrowers ? this.state.topics[el].narrowers : [];
+            if (!narrowers.length) {
+                stainedGlasses.push(el);
+            } else {
+                queue = queue.concat(narrowers);
+            }
+            el = queue.shift();
+        }
+
+        return stainedGlasses;
     }
 
     /**
@@ -172,15 +196,15 @@ export default class Path extends React.Component {
      */
     _getSubTopics(topic) {
         let topics = [];
-        let queue = this.state.topics[topic] && this.state.topics[topic].narrowers ? this.state.topics[topic].narrowers : [];
+        let queue = this.state.topics[topic] && this.state.topics[topic].narrowers ? this.state.topics[topic].narrowers.slice() : [];
 
         let el = queue.shift();
         while (el) {
-            console.log(el);
-            topics.push(el);
             const narrowers = this.state.topics[el] && this.state.topics[el].narrowers ? this.state.topics[el].narrowers : [];
-            queue = queue.concat(narrowers);
-
+            if (narrowers.length) {
+                topics.push(el);
+                queue = queue.concat(narrowers);
+            }
             el = queue.shift();
         }
 
