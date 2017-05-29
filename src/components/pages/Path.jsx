@@ -23,11 +23,13 @@ export default class Path extends React.Component {
             viewpoints: [],
             corpus: [],
             topics: [],
+            upperTopics: [],
             currentTopicStack: []
         };
 
         // binding
         this._showMyPath = this._showMyPath.bind(this);
+        this._parseViewpoints = this._parseViewpoints.bind(this);
         this._navigateBack = this._navigateBack.bind(this);
         this._navigateThoughTopic = this._navigateThoughTopic.bind(this);
         this._addToMyPath = this._addToMyPath.bind(this);
@@ -66,7 +68,9 @@ export default class Path extends React.Component {
             const state = this.state;
             state.viewpoints = data[0];
             state.corpus = data[1];
-            state.topics = this._getTopics(state.viewpoints);
+            const parsedViewpoint = this._parseViewpoints(state.viewpoints);
+            state.topics = parsedViewpoint.topics;
+            state.upperTopics = parsedViewpoint.uppers;
 
             // save the data in the component state
             this.setState(state)
@@ -79,14 +83,18 @@ export default class Path extends React.Component {
      * @param viewpoints
      * @returns {{}}
      */
-    _getTopics(viewpoints) {
+    _parseViewpoints(viewpoints) {
         const topics = {};
-        let topicTree = null;
+        let uppers = [];
 
         // loop through viewpoints
         viewpoints.map(viewpoint => {
             // a viewpoint is an object, so get his first attribute (which is his id)
             const viewpointId = Object.keys(viewpoint)[0];
+
+            // get upper topics of this viewpoint
+            uppers = uppers.concat(viewpoint[viewpointId].upper);
+
             // loop through the viewpoint's attributes (which are 'items')
             Object.keys(viewpoint[viewpointId]).map(itemId => {
 
@@ -127,7 +135,7 @@ export default class Path extends React.Component {
             });
         });
 
-        return topics;
+        return {topics, uppers};
     }
 
     /**
@@ -213,6 +221,7 @@ export default class Path extends React.Component {
 
     render() {
         const topics = this.state.topics;
+        const upperTopics = this.state.upperTopics;
 
         // get the topic at the top of the stack, or null if the stack is empty
         const currentTopic = this.state.currentTopicStack.length ? this.state.currentTopicStack[this.state.currentTopicStack.length - 1]: null;
@@ -234,9 +243,8 @@ export default class Path extends React.Component {
                                     <PathStainedGlass addToMyPath={_ => this._addToMyPath(topic)} key={i} stainedGlassName={topic} />
                         })
                     :
-                        Object.keys(topics)
-                            .filter(topic => topics[topic].narrowers.length !== 0)
-                            .map((topic, i) => <PathTopic navigate={_ => this._navigateThoughTopic(topic)} addToMyPath={_ => this._addToMyPath(topic)} key={i} topic={topic} narrowers={topics[topic].narrowers.length} />)
+
+                        upperTopics.map((topic, i) => <PathTopic navigate={_ => this._navigateThoughTopic(topic.name)} addToMyPath={_ => this._addToMyPath(topic.name)} key={i} topic={topic.name} narrowers={topics[topic.name] && topics[topic.name].narrowers.length} />)
                 }
             </div>
         )
