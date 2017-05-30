@@ -32,11 +32,10 @@ export default class Path extends React.Component {
         this._parseViewpoints = this._parseViewpoints.bind(this);
         this._navigateBack = this._navigateBack.bind(this);
         this._navigateThoughTopic = this._navigateThoughTopic.bind(this);
-        this._addToMyPath = this._addToMyPath.bind(this);
+        this._addTopicToMyPath = this._addTopicToMyPath.bind(this);
+        this._addStainedGlassToMyPath = this._addStainedGlassToMyPath.bind(this);
         this._getStainedGlasses = this._getStainedGlasses.bind(this);
-        this._getSubTopics = this._getSubTopics.bind(this);
-        this._findItemName = this._findItemName.bind(this);
-        this._searchStainedGlassInCorpus = this._searchStainedGlassInCorpus.bind(this);
+        this._findItemInCorpus = this._findItemInCorpus.bind(this);
     }
 
     componentDidMount() {
@@ -174,84 +173,61 @@ export default class Path extends React.Component {
     }
 
     /**
-     *
-     * @param {string} topic
+     * Search all the stained glasses of a topic and add it to my path
+     * @param {string} topicId : the id of a topic
      */
-    _addToMyPath(topic) {
-        PathService.add(topic, this._getSubTopics(topic), this._getStainedGlasses(topic));
-    }
-
-    _searchStainedGlassInCorpus(topicId) {
-
-        for (let corpus of this.state.corpus) {
-            const corpusItems = corpus[Object.keys(corpus)[0]];
-            for (let itemId in corpusItems) {
-                if (itemId === topicId) {
-                    return corpusItems[itemId];
-                }
-            }
-        }
-
-        return null;
+    _addTopicToMyPath(topicId) {
+        PathService.add(this._getStainedGlasses(topicId));
     }
 
     /**
-     * Get all the stained glasses of the given topic
+     * Search the given item in the corpus to have all the information about it, and add it to my path
+     * @param {object} item : the item to add to my path
+     */
+    _addStainedGlassToMyPath(item) {
+        PathService.add([this._findItemInCorpus(item)]);
+    }
+
+    /**
+     * Get all the stained glasses of a given topic
      * @param {string} topic
      * @returns {Array}
      */
-    _getStainedGlasses(topic) {
-        let stainedGlasses = [];
-        let queue = this.state.topics[topic] && this.state.topics[topic].narrowers ? this.state.topics[topic].narrowers.slice() : [];
+    _getStainedGlasses(topicId) {
+        let stainedGlasses = this.state.topics[topicId].items;
+        let topicsQueue = this.state.topics[topicId].narrowers.slice();
 
-        let el = queue.shift();
-        while (el) {
-            const narrowers = this.state.topics[el] && this.state.topics[el].narrowers ? this.state.topics[el].narrowers : [];
-            if (!narrowers.length) {
-                stainedGlasses.push(el);
-            } else {
-                queue = queue.concat(narrowers);
+        // continue while there is a topic in the queue
+        let currentTopicId = topicsQueue.shift();
+        while (currentTopicId) {
+            const currentTopic = this.state.topics[currentTopicId];
+
+            if (currentTopic) {
+              // add the items of this topic to the stainedGlasses array
+              currentTopic.items.map(item => !stainedGlasses.includes(item) && stainedGlasses.push(this._findItemInCorpus(item)));
+
+              // add the narrowers of this topic to the queue because we have to go through them
+              currentTopic.narrowers.map(narrower => !topicsQueue.includes(narrower) && topicsQueue.push(narrower));
             }
-            el = queue.shift();
+
+            currentTopicId = topicsQueue.shift();
         }
 
         return stainedGlasses;
     }
 
     /**
-     * Get all the subtopic of the given topic
-     * @param {string} topic
-     * @returns {Array}
-     */
-    _getSubTopics(topic) {
-        let topics = [];
-        let queue = this.state.topics[topic] && this.state.topics[topic].narrowers ? this.state.topics[topic].narrowers.slice() : [];
-
-        let el = queue.shift();
-        while (el) {
-            const narrowers = this.state.topics[el] && this.state.topics[el].narrowers ? this.state.topics[el].narrowers : [];
-            if (narrowers.length) {
-                topics.push(el);
-                queue = queue.concat(narrowers);
-            }
-            el = queue.shift();
-        }
-
-        return topics;
-    }
-
-    /**
      * Look for the given item in the corpus and get his name
      * @param {object} item: the item to look at
-     * @return {string} the item name
+     * @return {object} the item found
      */
-    _findItemName(item) {
+    _findItemInCorpus(item) {
       for (let corpus of this.state.corpus) {
         if (corpus[item.corpus] && corpus[item.corpus][item.id]) {
-          return corpus[item.corpus][item.id].name[0];
+          return corpus[item.corpus][item.id];
         }
       }
-      return "sans nom";
+      return {}
     }
 
     render() {
@@ -267,15 +243,15 @@ export default class Path extends React.Component {
         if (currentTopic) {
           topics[currentTopic].narrowers.map((topicId, i) => {
             const topic = topics[topicId];
-            listItems.push(<PathTopic navigate={_ => this._navigateThoughTopic(topicId)} addToMyPath={_ => this._addToMyPath(topicId)} key={i} topic={topic.name} narrowers={topic.narrowers.length} items={topic.items.length} />)
+            listItems.push(<PathTopic navigate={_ => this._navigateThoughTopic(topicId)} addToMyPath={_ => this._addTopicToMyPath(topicId)} key={i} topic={topic.name} narrowers={topic.narrowers.length} items={topic.items.length} />)
           })
           topics[currentTopic].items.map((item, i) => {
-            listItems.push(<PathStainedGlass addToMyPath={_ => this._addToMyPath(item.id)} key={i} stainedGlassName={this._findItemName(item)} />)
+            listItems.push(<PathStainedGlass addToMyPath={_ => this._addStainedGlassToMyPath(item)} key={i} stainedGlassName={this._findItemInCorpus(item).name} />)
           })
         } else {
           // if there is no currentTopic, just display the upper topics
           upperTopics.map((topic, i) => {
-            listItems.push(<PathTopic navigate={_ => this._navigateThoughTopic(topic.id)} addToMyPath={_ => this._addToMyPath(topic.id)} key={i} topic={topic.name} narrowers={topics[topic.id].narrowers.length} items={topics[topic.id].items.length} />)
+            listItems.push(<PathTopic navigate={_ => this._navigateThoughTopic(topic.id)} addToMyPath={_ => this._addTopicToMyPath(topic.id)} key={i} topic={topic.name} narrowers={topics[topic.id].narrowers.length} items={topics[topic.id].items.length} />)
           })
         }
 

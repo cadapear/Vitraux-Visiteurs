@@ -3,41 +3,24 @@ const STORAGE_NAME = "myPath";
 module.exports = {
 
     /**
-     * add the the new topic and the stained glasses of this topic to the path
+     * Add these new stainedGlasses to my path
      *
-     * @param {string} newTopic
-     * @param {array} subTopics: the topics under the newTopic in the "topic tree"
-     * @param {array} stainedGlasses: the stained glasses under the newTopics in the "topic tree"
+     * @param {array} stainedGlasses : the stainedGlasses to add to my path
      */
-    add(newTopic, subTopics, stainedGlasses) {
-
+    add(stainedGlasses) {
+        console.log("to add": stainedGlasses);
+        // read my path in the localStorage
         let current = localStorage.getItem(STORAGE_NAME);
 
-        // if there is not path in the localStorage, init it
-        if (!current) {
-            current = {
-                topics: [],
-                stainedGlasses: []
-            };
-        } else {
-            current = JSON.parse(current);
-        }
+        // if there is no path in the localStorage, init it
+        current = current ? JSON.parse(current) : [];
 
-        // remove all the topics that are in the subTopics array
-        current.topics = current.topics.filter(topic => !subTopics.includes(topic));
+        // add the stainedGlasses that are not already in it
+        stainedGlasses.map(stainedGlass => !current.includes(stainedGlass) && current.push(stainedGlass));
 
-        // add all strainedGlasses that are not already in the localStorage
-        for (let stainedGlass of stainedGlasses) {
-            if (!current.stainedGlasses.includes(stainedGlass)) {
-                current.stainedGlasses.push(stainedGlass);
-            }
-        }
+        console.log("result :", current);
 
-        // push only if not already in the path
-        if (!current.topics.includes(newTopic)) {
-            current.topics.push(newTopic);
-        }
-
+        // update my path in the localStorage
         localStorage.setItem(STORAGE_NAME, JSON.stringify(current));
 
     }
