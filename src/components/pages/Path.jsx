@@ -7,6 +7,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 import PathTopic from '../Topic/PathTopic.jsx';
 import PathStainedGlass from '../StainedGlass/PathStainedGlass.jsx';
+import TopicBreadcrumb from '../Topic/TopicBreadcrumb.jsx';
 
 import {viewpoints, corpusArgos, APIs} from '../../config/constants';
 
@@ -36,6 +37,7 @@ export default class Path extends React.Component {
         this._addStainedGlassToMyPath = this._addStainedGlassToMyPath.bind(this);
         this._getStainedGlasses = this._getStainedGlasses.bind(this);
         this._findItemInCorpus = this._findItemInCorpus.bind(this);
+        this._upTheTree = this._upTheTree.bind(this);
     }
 
     componentDidMount() {
@@ -81,8 +83,8 @@ export default class Path extends React.Component {
     /**
      * Sort items by topic (and save narrowers, so we can use the generated object as a tree if we need)
      *
-     * @param viewpoints
-     * @returns {{}}
+     * @param {array} viewpoints
+     * @returns {object}
      */
     _parseViewpoints(viewpoints) {
         const topics = {};
@@ -230,6 +232,29 @@ export default class Path extends React.Component {
       return {}
     }
 
+    /**
+     * Up the tree until reaching the given topic
+     * @param {string} topic
+     */
+    _upTheTree(topic) {
+      const state = this.state;
+
+      if (!topic) {
+        state.currentTopicStack = [];
+      } else {
+        let newStack = [];
+        let i = 0;
+        while(state.currentTopicStack[i] !== topic && i < state.currentTopicStack.length) {
+          newStack.push(state.currentTopicStack[i]);
+          i++;
+        }
+        newStack.push(topic);
+        state.currentTopicStack = newStack;
+      }
+
+      this.setState(state);
+    }
+
     render() {
         const topics = this.state.topics;
         const upperTopics = this.state.upperTopics;
@@ -237,13 +262,24 @@ export default class Path extends React.Component {
         // get the topic at the top of the stack, or null if the stack is empty
         const currentTopic = this.state.currentTopicStack.length ? this.state.currentTopicStack[this.state.currentTopicStack.length - 1]: null;
 
-        let listItems = [];
+        // prepare topics for the breadcrumb
+        const breadcrumb = this.state.currentTopicStack.map(topicId => {
+          return {
+            id: topicId,
+            name: topics[topicId].name
+          }
+        });
 
+        // prepare the topics and stained glasses to display
+        let listItems = [];
         // if there is a currentTopic, display his narrowers topics, and his items
         if (currentTopic) {
           topics[currentTopic].narrowers.map((topicId, i) => {
             const topic = topics[topicId];
-            listItems.push(<PathTopic navigate={_ => this._navigateThoughTopic(topicId)} addToMyPath={_ => this._addTopicToMyPath(topicId)} key={i} topic={topic.name} narrowers={topic.narrowers.length} items={topic.items.length} />)
+            // the topic might not exists
+            if (topic) {
+              listItems.push(<PathTopic navigate={_ => this._navigateThoughTopic(topicId)} addToMyPath={_ => this._addTopicToMyPath(topicId)} key={i} topic={topic.name} narrowers={topic.narrowers.length} items={topic.items.length} />)
+            }
           })
           topics[currentTopic].items.map((item, i) => {
             listItems.push(<PathStainedGlass addToMyPath={_ => this._addStainedGlassToMyPath(item)} key={i} stainedGlassName={this._findItemInCorpus(item).name} />)
@@ -261,6 +297,7 @@ export default class Path extends React.Component {
                 <Link to='/'>Dashboard</Link>
                 <RaisedButton label="Voir mon parcours" secondary={true} onClick={this._showMyPath} />
                 <RaisedButton label="Retour" primary={true} onClick={this._navigateBack} />
+                <TopicBreadcrumb topics={breadcrumb} upTheTree={this._upTheTree} />
                 {listItems}
             </div>
         )

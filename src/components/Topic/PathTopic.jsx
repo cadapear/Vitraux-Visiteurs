@@ -14,8 +14,9 @@ export default class PathTopic extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         this.setState({
+            items: nextProps.items,
             topic: nextProps.topic,
-            narrowers: nextProps.narrowers
+            narrowers: nextProps.narrowers,
         })
     }
 

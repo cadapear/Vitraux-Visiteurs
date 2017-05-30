@@ -15,7 +15,6 @@ function read() {
  * @param {array} stainedGlasses : the stainedGlasses to add to my path
  */
 function add(stainedGlasses) {
-    console.log("to add": stainedGlasses);
     // read my path in the localStorage
     let current = localStorage.getItem(STORAGE_NAME);
 
@@ -25,11 +24,8 @@ function add(stainedGlasses) {
     // add the stainedGlasses that are not already in it
     stainedGlasses.map(stainedGlass => !current.includes(stainedGlass) && current.push(stainedGlass));
 
-    console.log("result :", current);
-
     // update my path in the localStorage
     localStorage.setItem(STORAGE_NAME, JSON.stringify(current));
-
 }
 
 /**
