@@ -7,6 +7,7 @@ export default class PathTopic extends React.Component {
 
         this.state = {
             narrowers: props.narrowers,
+            items: props.items,
             topic: props.topic
         }
     }
@@ -22,7 +23,7 @@ export default class PathTopic extends React.Component {
         return (
             <div>
                 <div onClick={this.props.navigate}>
-                    {`${this.state.topic} [${this.state.narrowers}]`}
+                    {`${this.state.topic} [${this.state.narrowers}] - (${this.state.items})`}
                 </div>
                 <div onClick={this.props.addToMyPath}>
                     +

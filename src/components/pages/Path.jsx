@@ -35,6 +35,8 @@ export default class Path extends React.Component {
         this._addToMyPath = this._addToMyPath.bind(this);
         this._getStainedGlasses = this._getStainedGlasses.bind(this);
         this._getSubTopics = this._getSubTopics.bind(this);
+        this._findItemName = this._findItemName.bind(this);
+        this._searchStainedGlassInCorpus = this._searchStainedGlassInCorpus.bind(this);
     }
 
     componentDidMount() {
@@ -96,44 +98,49 @@ export default class Path extends React.Component {
             uppers = uppers.concat(viewpoint[viewpointId].upper);
 
             // loop through the viewpoint's attributes (which are 'items')
-            Object.keys(viewpoint[viewpointId]).map(itemId => {
+            Object.keys(viewpoint[viewpointId]).map(topicId => {
 
-                const item = viewpoint[viewpointId][itemId];
+                const topic = viewpoint[viewpointId][topicId];
 
                 // continue only if the item has a name (else we can do nothing with it)
-                if (item.name) {
+                if (topic.name) {
 
-                    const itemName = item.name[0];
+                    const topicName = topic.name[0];
+                    const topicItems = topic.item ? topic.item : [];
+                    const topicNarrower = topic.narrower ? topic.narrower : [];
+
+                    // if the topic is no in the topics array, add it
+                    // else, it means that it has been added as a broader, so update it because it is incompleted
+                    if (!topics[topicId]) {
+                      topics[topicId] = {
+                        name: topicName,
+                        items: topicItems,
+                        narrowers: topicNarrower
+                      }
+                    } else {
+                      topics[topicId].name = topicName;
+                      topics[topicId].items = topicItems;
+                    }
 
                     // if this item has a parent topic (broader), add it has a children
-                    if (item.broader) {
+                    if (topic.broader) {
 
-                        const broader = item.broader[0].name;
-                        if (topics[broader]) {
-                            topics[broader].narrowers.push(itemName);
+                        const broaderId = topic.broader[0].id;
+
+                        if (topics[broaderId]) {
+                            topics[broaderId].narrowers.push(topicId);
                         } else {
-                            topics[broader] = {
-                                narrowers: [itemName]
+                            topics[broaderId] = {
+                                narrowers: [topicId]
                             };
                         }
+
                     }
-
-                    // if the item has a children topic (narrower), add it has a parent
-                    if (item.narrower) {
-
-                        const narrower = item.narrower[0].name;
-                        if (topics[itemName]) {
-                            topics[itemName].narrowers.push(narrower);
-                        } else {
-                            topics[itemName] = {
-                                narrowers: [narrower]
-                            }
-                        }
-                    }
-
                 }
             });
         });
+
+        console.log(topics);
 
         return {topics, uppers};
     }
@@ -172,6 +179,20 @@ export default class Path extends React.Component {
      */
     _addToMyPath(topic) {
         PathService.add(topic, this._getSubTopics(topic), this._getStainedGlasses(topic));
+    }
+
+    _searchStainedGlassInCorpus(topicId) {
+
+        for (let corpus of this.state.corpus) {
+            const corpusItems = corpus[Object.keys(corpus)[0]];
+            for (let itemId in corpusItems) {
+                if (itemId === topicId) {
+                    return corpusItems[itemId];
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -219,6 +240,20 @@ export default class Path extends React.Component {
         return topics;
     }
 
+    /**
+     * Look for the given item in the corpus and get his name
+     * @param {object} item: the item to look at
+     * @return {string} the item name
+     */
+    _findItemName(item) {
+      for (let corpus of this.state.corpus) {
+        if (corpus[item.corpus] && corpus[item.corpus][item.id]) {
+          return corpus[item.corpus][item.id].name[0];
+        }
+      }
+      return "sans nom";
+    }
+
     render() {
         const topics = this.state.topics;
         const upperTopics = this.state.upperTopics;
@@ -226,26 +261,31 @@ export default class Path extends React.Component {
         // get the topic at the top of the stack, or null if the stack is empty
         const currentTopic = this.state.currentTopicStack.length ? this.state.currentTopicStack[this.state.currentTopicStack.length - 1]: null;
 
+        let listItems = [];
+
+        // if there is a currentTopic, display his narrowers topics, and his items
+        if (currentTopic) {
+          topics[currentTopic].narrowers.map((topicId, i) => {
+            const topic = topics[topicId];
+            listItems.push(<PathTopic navigate={_ => this._navigateThoughTopic(topicId)} addToMyPath={_ => this._addToMyPath(topicId)} key={i} topic={topic.name} narrowers={topic.narrowers.length} items={topic.items.length} />)
+          })
+          topics[currentTopic].items.map((item, i) => {
+            listItems.push(<PathStainedGlass addToMyPath={_ => this._addToMyPath(item.id)} key={i} stainedGlassName={this._findItemName(item)} />)
+          })
+        } else {
+          // if there is no currentTopic, just display the upper topics
+          upperTopics.map((topic, i) => {
+            listItems.push(<PathTopic navigate={_ => this._navigateThoughTopic(topic.id)} addToMyPath={_ => this._addToMyPath(topic.id)} key={i} topic={topic.name} narrowers={topics[topic.id].narrowers.length} items={topics[topic.id].items.length} />)
+          })
+        }
+
         return (
             <div>
                 <h1>Création de votre parcours</h1>
                 <Link to='/'>Dashboard</Link>
                 <RaisedButton label="Voir mon parcours" secondary={true} onClick={this._showMyPath} />
                 <RaisedButton label="Retour" primary={true} onClick={this._navigateBack} />
-                {
-                    currentTopic
-                    ?
-                        topics[currentTopic].narrowers.map((topic, i) => {
-                            return topics[topic]
-                                ?
-                                    <PathTopic navigate={_ => this._navigateThoughTopic(topic)} addToMyPath={_ => this._addToMyPath(topic)} key={i} topic={topic} narrowers={topics[topic].narrowers.length} />
-                                :
-                                    <PathStainedGlass addToMyPath={_ => this._addToMyPath(topic)} key={i} stainedGlassName={topic} />
-                        })
-                    :
-
-                        upperTopics.map((topic, i) => <PathTopic navigate={_ => this._navigateThoughTopic(topic.name)} addToMyPath={_ => this._addToMyPath(topic.name)} key={i} topic={topic.name} narrowers={topics[topic.name] && topics[topic.name].narrowers.length} />)
-                }
+                {listItems}
             </div>
         )
     }
