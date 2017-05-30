@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-import PathService from '../../services/PathService';
+import PathHelper from '../../helpers/PathHelper';
 
 import RaisedButton from 'material-ui/RaisedButton';
 
@@ -177,7 +177,7 @@ export default class Path extends React.Component {
      * @param {string} topicId : the id of a topic
      */
     _addTopicToMyPath(topicId) {
-        PathService.add(this._getStainedGlasses(topicId));
+        PathHelper.add(this._getStainedGlasses(topicId));
     }
 
     /**
@@ -185,7 +185,7 @@ export default class Path extends React.Component {
      * @param {object} item : the item to add to my path
      */
     _addStainedGlassToMyPath(item) {
-        PathService.add([this._findItemInCorpus(item)]);
+        PathHelper.add([this._findItemInCorpus(item)]);
     }
 
     /**
