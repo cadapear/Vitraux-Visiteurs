@@ -29,6 +29,35 @@ class CorpusStore extends BaseStore {
     .catch(err => console.log("[CorpusStore] an error occured during the store initialisation"));
   }
 
+  /**
+   * Go through the corpora and filter the items by name
+   * @param {string} str : the filter value
+   * @return {array}
+   */
+  filterByName(str) {
+    let matches = [];
+    const filterRgx = new RegExp(str, 'i');
+
+    // loop through each corpus
+    this._corpora.map(corpus => {
+      // get the corpus name (first attribute)
+      const corpusName = Object.keys(corpus)[0];
+      // using the corpus name, loop through each item
+      Object.keys(corpus[corpusName]).map(itemId => {
+        const itemName = corpus[corpusName][itemId].name;
+        // check if the item name is matching the given string
+        if (itemName && filterRgx.test(itemName[0])) {
+          matches.push({
+            name: itemName[0],
+            id: itemId
+          });
+        }
+      });
+    });
+
+    return matches;
+  }
+
 }
 
 export default new CorpusStore();
