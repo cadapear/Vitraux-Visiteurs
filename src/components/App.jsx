@@ -8,7 +8,7 @@ import MyPath from './pages/MyPath.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import Badge from './pages/Badge.jsx';
 import History from './pages/History.jsx';
-import StainedGlass from './pages/StainedGlass.jsx';
+import SearchStainedGlass from './pages/SearchStainedGlass.jsx';
 
 require('../style/main.scss');
 
@@ -28,7 +28,7 @@ export default class App extends React.Component {
                         <Route path='/mypath' component={MyPath} />
                         <Route path='/badge' component={Badge}/>
                         <Route path='/history' component={History}/>
-                        <Route path='/stained-glass' component={StainedGlass}/>
+                        <Route path='/stained-glass' component={SearchStainedGlass}/>
                     </Switch>
                 </div>
             </div>

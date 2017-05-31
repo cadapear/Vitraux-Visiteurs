@@ -9,11 +9,8 @@ import PathTopic from '../Topic/PathTopic.jsx';
 import PathStainedGlass from '../StainedGlass/PathStainedGlass.jsx';
 import TopicBreadcrumb from '../Topic/TopicBreadcrumb.jsx';
 
-import {viewpoints, corpusArgos, APIs} from '../../config/constants';
-
-// hypertopic
-const hypertopic = require('hypertopic');
-const db = hypertopic(APIs);
+import ViewpointStore from '../../stores/ViewpointStore';
+import CorpusStore from '../../stores/CorpusStore';
 
 export default class Path extends React.Component {
 
@@ -22,7 +19,7 @@ export default class Path extends React.Component {
 
         this.state = {
             viewpoints: [],
-            corpus: [],
+            corpora: [],
             topics: [],
             upperTopics: [],
             currentTopicStack: []
@@ -30,7 +27,6 @@ export default class Path extends React.Component {
 
         // binding
         this._showMyPath = this._showMyPath.bind(this);
-        this._parseViewpoints = this._parseViewpoints.bind(this);
         this._navigateBack = this._navigateBack.bind(this);
         this._navigateThoughTopic = this._navigateThoughTopic.bind(this);
         this._addTopicToMyPath = this._addTopicToMyPath.bind(this);
@@ -38,112 +34,43 @@ export default class Path extends React.Component {
         this._getStainedGlasses = this._getStainedGlasses.bind(this);
         this._findItemInCorpus = this._findItemInCorpus.bind(this);
         this._upTheTree = this._upTheTree.bind(this);
+
+        this._setViewpoints = this._setViewpoints.bind(this);
+        this._setCorpora = this._setCorpora.bind(this);
     }
 
     componentDidMount() {
+      // listen the stores changes
+      ViewpointStore.addChangeListener(this._setViewpoints);
+      CorpusStore.addChangeListener(this._setCorpora);
+      // init component data
+      this._setViewpoints();
+      this._setCorpora();
+    }
 
-        // request all the required data
-        Promise.all([
-
-            // get the viewpoints
-            new Promise((resolve, reject) => {
-                Promise.all(
-                    viewpoints.map(viewpoint => {
-                        return new Promise((resolve, reject) => {
-                            db.getView("/viewpoint/" + viewpoint, x => resolve(x))
-                        })
-                    })
-                ).then(data => resolve(data))
-            }),
-
-            // get the corpus
-            new Promise((resolve, reject) => {
-                Promise.all(
-                    corpusArgos.map(corpus => {
-                        return new Promise((resolve, reject) => {
-                            db.getView("/corpus/" + corpus, x => resolve(x))
-                        })
-                    })
-                ).then(data => resolve(data))
-            })
-
-        ]).then(data => {
-            const state = this.state;
-            state.viewpoints = data[0];
-            state.corpus = data[1];
-            const parsedViewpoint = this._parseViewpoints(state.viewpoints);
-            state.topics = parsedViewpoint.topics;
-            state.upperTopics = parsedViewpoint.uppers;
-
-            // save the data in the component state
-            this.setState(state)
-        });
+    componentWillUnmount() {
+      // remove stores listeners
+      ViewpointStore.removeChangeListener(this._setViewpoints);
+      CorpusStore.removeChangeListener(this._setCorpora);
     }
 
     /**
-     * Sort items by topic (and save narrowers, so we can use the generated object as a tree if we need)
-     *
-     * @param {array} viewpoints
-     * @returns {object}
+     * Set the state with topics and upperTopics from the ViewpointStore
      */
-    _parseViewpoints(viewpoints) {
-        const topics = {};
-        let uppers = [];
+    _setViewpoints() {
+      this.setState({
+        topics: ViewpointStore.topics,
+        upperTopics: ViewpointStore.upperTopics
+      })
+    }
 
-        // loop through viewpoints
-        viewpoints.map(viewpoint => {
-            // a viewpoint is an object, so get his first attribute (which is his id)
-            const viewpointId = Object.keys(viewpoint)[0];
-
-            // get upper topics of this viewpoint
-            uppers = uppers.concat(viewpoint[viewpointId].upper);
-
-            // loop through the viewpoint's attributes (which are 'items')
-            Object.keys(viewpoint[viewpointId]).map(topicId => {
-
-                const topic = viewpoint[viewpointId][topicId];
-
-                // continue only if the item has a name (else we can do nothing with it)
-                if (topic.name) {
-
-                    const topicName = topic.name[0];
-                    const topicItems = topic.item ? topic.item : [];
-                    const topicNarrower = topic.narrower ? topic.narrower : [];
-
-                    // if the topic is no in the topics array, add it
-                    // else, it means that it has been added as a broader, so update it because it is incompleted
-                    if (!topics[topicId]) {
-                      topics[topicId] = {
-                        name: topicName,
-                        items: topicItems,
-                        narrowers: topicNarrower
-                      }
-                    } else {
-                      topics[topicId].name = topicName;
-                      topics[topicId].items = topicItems;
-                    }
-
-                    // if this item has a parent topic (broader), add it has a children
-                    if (topic.broader) {
-
-                        const broaderId = topic.broader[0].id;
-
-                        if (topics[broaderId]) {
-                            topics[broaderId].narrowers.push(topicId);
-                        } else {
-                            topics[broaderId] = {
-                                narrowers: [topicId]
-                            };
-                        }
-
-                    }
-                }
-            });
-        });
-
-        console.log(topics);
-
-        return {topics, uppers};
+    /**
+     * Set the state with corpora from the CorpusStore
+     */
+    _setCorpora() {
+      this.setState({
+        corpora: CorpusStore.corpora
+      })
     }
 
     /**
@@ -224,7 +151,7 @@ export default class Path extends React.Component {
      * @return {object} the item found
      */
     _findItemInCorpus(item) {
-      for (let corpus of this.state.corpus) {
+      for (let corpus of this.state.corpora) {
         if (corpus[item.corpus] && corpus[item.corpus][item.id]) {
           return corpus[item.corpus][item.id];
         }

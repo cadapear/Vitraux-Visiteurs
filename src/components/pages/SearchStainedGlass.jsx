@@ -6,7 +6,7 @@ export default class StainedGlass extends React.Component {
   render() {
     return (
       <div>
-        StainedGlass page <br />
+        <h1>Rechercher un vitrail</h1>
         <Link to='/'>Dashboard</Link>
       </div>
     )
