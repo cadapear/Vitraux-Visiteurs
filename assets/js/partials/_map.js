@@ -27,7 +27,7 @@ function getCourseMap(corpus) {
         //We use the same kind of workaround as in the tour page because the data from viewpoint are processed before, hence undefined
         dataCorpus.map(function(thisCorpus){
                 var rowids = [];
-                //Allow us to find every rowId for every topic we are looking for 
+                //Allow us to find every rowId for every topic we are looking for
                 thisCorpus.rows.forEach(function(row){
                     if(row.value.topic && topicids.indexOf(row.value.topic.id) != -1 ){
                             rowids.push(row.id);
@@ -40,8 +40,8 @@ function getCourseMap(corpus) {
                         places_name.push(row.value.spatial);
                     }
                 });
-        });   
-    } 
+        });
+    }
 
     function createMap(center){
            var options = {
@@ -50,7 +50,7 @@ function getCourseMap(corpus) {
                 mapTypeId: google.maps.MapTypeId.TERRAIN,
                 maxZoom: 20
             };
-            map = new google.maps.Map(document.getElementById('map'), options);         
+            map = new google.maps.Map(document.getElementById('map'), options);
     }
 
     function getWaypoints(center,place,map){
@@ -61,7 +61,7 @@ function getCourseMap(corpus) {
         if(constanteSpatial[place]){
            optionRequestPlace.query = constanteSpatial[place];
         }
-        
+
         return new Promise(function(resolve,reject){
 
               googlePlacesService.textSearch(optionRequestPlace,function(textSearch,requestStatus){
@@ -123,14 +123,14 @@ function getCourseMap(corpus) {
         }
     }
 
-       
+
 
     function setRoute(dataWaypoint,map,indexStart){
         var googleDirectionService = new google.maps.DirectionsService(),
             googleDirectionRenderer = new google.maps.DirectionsRenderer({map:map,suppressMarkers:true}),
             waypoints = dataWaypoint.map(function(data){return data.waypoint}),
             options = {origin: waypoints[0].location, destination: waypoints[0].location, waypoints: waypoints,travelMode: google.maps.DirectionsTravelMode.WALKING, optimizeWaypoints: true};
-            
+
 
 
             return new Promise(function(resolve,reject){
@@ -165,9 +165,9 @@ function getCourseMap(corpus) {
                         info.open(map,marker);
                     });
                 }
-                
-            });  
-            storeInformation(getCourseDuration(duration),Math.ceil(distance/1000)); 
+
+            });
+            storeInformation(getCourseDuration(duration),Math.ceil(distance/1000));
         }
     }
 
@@ -196,11 +196,3 @@ function getCourseMap(corpus) {
         })
 
 }
-
-
-
-   
-
-   
-
-

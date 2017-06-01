@@ -26,7 +26,7 @@ class CorpusStore extends BaseStore {
       // tell all the listening components that the store data has changed
       this.emitChange();
     })
-    .catch(err => console.log("[CorpusStore] an error occured during the store initialisation"));
+    .catch(err => console.log("[CorpusStore] an error occured during the store initialisation", err));
   }
 
   /**

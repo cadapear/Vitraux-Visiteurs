@@ -1,6 +1,8 @@
 import React from 'react';
 import { Row, Col } from 'react-flexbox-grid';
 
+import Map from '../map/Map.jsx';
+
 import Chip from 'material-ui/Chip';
 import CircularProgress from 'material-ui/CircularProgress';
 
@@ -70,8 +72,8 @@ export default class stainedGlassDetails extends React.Component {
             <img className="stainedGlass-image" src={this.state.stainedGlass.resource[0]} />
           </Col>
         </Row>
-        <Row>
-          
+        <Row className="fullheight">
+          <Map location={this.state.stainedGlass.spatial[0]} />
         </Row>
       </div>
     )
