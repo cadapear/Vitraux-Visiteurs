@@ -24,11 +24,11 @@ export default class App extends React.Component {
                 <div className="app-container">
                     <Switch>
                         <Route exact path='/' component={Dashboard}/>
+                        <Route path='/stained-glass/:id' component={StainedGlassDetails}/>
                         <Route path='/stained-glass' component={Path}/>
                         <Route path='/my-path' component={MyPath} />
                         <Route path='/badge' component={Badge}/>
                         <Route path='/history' component={History}/>
-                        <Route path='/stained-glass/:id' component={StainedGlassDetails}/>
                     </Switch>
                 </div>
             </div>
