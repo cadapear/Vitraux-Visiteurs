@@ -1,9 +1,9 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 
 import PathHelper from '../../helpers/PathHelper';
 
 import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
 
 import PathTopic from '../Topic/PathTopic.jsx';
 import PathStainedGlass from '../StainedGlass/PathStainedGlass.jsx';
@@ -22,6 +22,7 @@ export default class Path extends React.Component {
             corpora: [],
             topics: [],
             upperTopics: [],
+            filteredItems: [],
             currentTopicStack: []
         };
 
@@ -37,6 +38,8 @@ export default class Path extends React.Component {
 
         this._setViewpoints = this._setViewpoints.bind(this);
         this._setCorpora = this._setCorpora.bind(this);
+
+        this._handleNameInputChange = this._handleNameInputChange.bind(this);
     }
 
     componentDidMount() {
@@ -182,9 +185,19 @@ export default class Path extends React.Component {
       this.setState(state);
     }
 
+    /**
+     * Handle changes on the name TextField
+     */
+    _handleNameInputChange(e, v) {
+      this.setState({
+        filteredItems: v.length > 1 ? CorpusStore.filterByName(v) : []
+      });
+    }
+
     render() {
         const topics = this.state.topics;
         const upperTopics = this.state.upperTopics;
+        const filteredItems = this.state.filteredItems;
 
         // get the topic at the top of the stack, or null if the stack is empty
         const currentTopic = this.state.currentTopicStack.length ? this.state.currentTopicStack[this.state.currentTopicStack.length - 1]: null;
@@ -199,32 +212,47 @@ export default class Path extends React.Component {
 
         // prepare the topics and stained glasses to display
         let listItems = [];
-        // if there is a currentTopic, display his narrowers topics, and his items
-        if (currentTopic) {
-          topics[currentTopic].narrowers.map((topicId, i) => {
-            const topic = topics[topicId];
-            // the topic might not exists
-            if (topic) {
-              listItems.push(<PathTopic navigate={_ => this._navigateThoughTopic(topicId)} addToMyPath={_ => this._addTopicToMyPath(topicId)} key={i} topic={topic.name} narrowers={topic.narrowers.length} items={topic.items.length} />)
-            }
-          })
-          topics[currentTopic].items.map((item, i) => {
-            listItems.push(<PathStainedGlass addToMyPath={_ => this._addStainedGlassToMyPath(item)} key={i} stainedGlassName={this._findItemInCorpus(item).name} />)
-          })
+
+        // if filteredItems is not empty, just display the stainedGlasses in filteredItems
+        // else, display the topics tree
+        if (filteredItems.length) {
+          listItems = filteredItems.map(item => <PathStainedGlass addToMyPath={_ => this._addStainedGlassToMyPath(item)} key={item.id} id={item.id} name={item.name} />);
         } else {
-          // if there is no currentTopic, just display the upper topics
-          upperTopics.map((topic, i) => {
-            listItems.push(<PathTopic navigate={_ => this._navigateThoughTopic(topic.id)} addToMyPath={_ => this._addTopicToMyPath(topic.id)} key={i} topic={topic.name} narrowers={topics[topic.id].narrowers.length} items={topics[topic.id].items.length} />)
-          })
+          // if there is a currentTopic, display his narrowers topics, and his items
+          if (currentTopic) {
+            topics[currentTopic].narrowers.map((topicId, i) => {
+              const topic = topics[topicId];
+              // the topic might not exists
+              if (topic) {
+                listItems.push(<PathTopic navigate={_ => this._navigateThoughTopic(topicId)} addToMyPath={_ => this._addTopicToMyPath(topicId)} key={i} topic={topic.name} narrowers={topic.narrowers.length} items={topic.items.length} />)
+              }
+            })
+            topics[currentTopic].items.map((item, i) => {
+              listItems.push(<PathStainedGlass addToMyPath={_ => this._addStainedGlassToMyPath(item)} key={i} id={item.id} name={this._findItemInCorpus(item).name} />)
+            })
+          } else {
+            // if there is no currentTopic, just display the upper topics
+            upperTopics.map((topic, i) => {
+              listItems.push(<PathTopic navigate={_ => this._navigateThoughTopic(topic.id)} addToMyPath={_ => this._addTopicToMyPath(topic.id)} key={i} topic={topic.name} narrowers={topics[topic.id].narrowers.length} items={topics[topic.id].items.length} />)
+            })
+          }
         }
 
         return (
             <div>
                 <h1>Création de votre parcours</h1>
-                <Link to='/'>Dashboard</Link>
                 <RaisedButton label="Voir mon parcours" secondary={true} onClick={this._showMyPath} />
-                <RaisedButton label="Retour" primary={true} onClick={this._navigateBack} />
-                <TopicBreadcrumb topics={breadcrumb} upTheTree={this._upTheTree} />
+                <TextField
+                  floatingLabelText="Rechercher par nom"
+                  onChange={this._handleNameInputChange}
+                />
+              {
+                !filteredItems.length &&
+                <div>
+                  <RaisedButton label="Retour" primary={true} onClick={this._navigateBack} />
+                  <TopicBreadcrumb topics={breadcrumb} upTheTree={this._upTheTree} />
+                </div>
+              }
                 {listItems}
             </div>
         )

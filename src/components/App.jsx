@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Link } from 'react-router-dom';
 
 import AppBar from 'material-ui/AppBar';
 
@@ -8,7 +8,7 @@ import MyPath from './pages/MyPath.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import Badge from './pages/Badge.jsx';
 import History from './pages/History.jsx';
-import SearchStainedGlass from './pages/SearchStainedGlass.jsx';
+import StainedGlassDetails from './pages/StainedGlassDetails.jsx';
 
 require('../style/main.scss');
 
@@ -18,17 +18,17 @@ export default class App extends React.Component {
         return (
             <div>
                 <AppBar
-                    title="Vitraux Visiteurs"
-                    iconClassNameRight="muidocs-icon-navigation-expand-more"
+                    title={<Link to='/'>Vitraux visiteurs</Link>}
+                    iconElementLeft={<span></span>}
                 />
                 <div className="app-container">
                     <Switch>
                         <Route exact path='/' component={Dashboard}/>
-                        <Route path='/path' component={Path}/>
-                        <Route path='/mypath' component={MyPath} />
+                        <Route path='/stained-glass' component={Path}/>
+                        <Route path='/my-path' component={MyPath} />
                         <Route path='/badge' component={Badge}/>
                         <Route path='/history' component={History}/>
-                        <Route path='/stained-glass' component={SearchStainedGlass}/>
+                        <Route path='/stained-glass/:id' component={StainedGlassDetails}/>
                     </Switch>
                 </div>
             </div>

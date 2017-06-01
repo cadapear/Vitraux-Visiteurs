@@ -49,7 +49,8 @@ class CorpusStore extends BaseStore {
         if (itemName && filterRgx.test(itemName[0])) {
           matches.push({
             name: itemName[0],
-            id: itemId
+            id: itemId,
+            corpus: corpusName
           });
         }
       });

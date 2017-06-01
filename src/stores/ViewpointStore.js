@@ -24,7 +24,6 @@ class ViewpointStore extends BaseStore {
    * Use the ViewpointService to init the store data
    */
   _init() {
-
     ViewpointService.getViewpoints()
     .then(data => this._parseViewpoints(data))
     .catch(err => console.log("[ViewpointStore] an error occured during the store initialisation"));

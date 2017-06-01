@@ -8,10 +8,10 @@ export default class Dashboard extends React.Component {
             <div>
                 Dashboard
                 <ul>
-                    <li><Link to='/path'>Creer un parcours</Link></li>
+                    <li><Link to='/stained-glass'>Vitraux</Link></li>
+                    <li><Link to='/my-path'>Mon parcours</Link></li>
                     <li><Link to='/badge'>Mes Badges</Link></li>
                     <li><Link to='/history'>Mon Historique</Link></li>
-                    <li><Link to='/stained-glass'>Rechercher un vitrail</Link></li>
                 </ul>
             </div>
         )
