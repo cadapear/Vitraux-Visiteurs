@@ -59,6 +59,27 @@ class CorpusStore extends BaseStore {
     return matches;
   }
 
+  /**
+   * Search a stained glass in the corpora by id
+   * @param {string} id : the stained glass id
+   * @return {object|null}
+   */
+  findById(id) {
+    // gor through topics
+    for (let corpus of this._corpora) {
+      // get the corpus name (first attribute)
+      const corpusName = Object.keys(corpus)[0];
+      // loop through each items of this corpus
+      for (let itemId of Object.keys(corpus[corpusName])) {
+        if (itemId === id) {
+          return corpus[corpusName][itemId];
+        }
+      }
+    }
+
+    return null;
+  }
+
 }
 
 export default new CorpusStore();

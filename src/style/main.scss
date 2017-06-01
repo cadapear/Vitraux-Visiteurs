@@ -1,4 +1,4 @@
-/* 
+/*
     Created on : 26 mai 2016, 20:10:40
     Author     : Yassine Doghri <http://yassine.doghri.fr>
 */
@@ -8,30 +8,9 @@
 @import "pages/explore";
 @import "pages/preview";
 
-$primary-color: #f9c452;
-$primary-color-darker: #d9a941;
-$light-color: #fefefe;
-
-body {
-    font-family: "Roboto";
+* {
+  font-family: "Roboto";
 }
-
-button, input, select, textarea {
-    font-family: "Roboto";
-}
-
-.bar-nav {
-    background-color: $primary-color;
-    border: none;
-
-    h1 {
-        color: $light-color;
-    }
-    a {
-        color: $light-color;
-    }
-}
-
 
 /**
  * .container-hide can be used to keep height:100%
@@ -55,4 +34,29 @@ html, body {
   position: fixed;
   bottom: 0px;
   overflow: auto;
+}
+
+.stainedGlass-image-container {
+  height: 100%;
+  text-align: center;
+}
+
+.stainedGlass-image {
+  max-height: 100%;
+  height: auto;
+  max-width: 100%;
+  width: auto;
+}
+
+.fullheight {
+  height: 100%;
+}
+
+.inline-chip-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.inline-chip {
+  margin: 4px;
 }
