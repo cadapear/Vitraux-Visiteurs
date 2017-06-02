@@ -6,8 +6,9 @@ and history of stained-glass windows in Troyes, France.
 ## Table of contents
 
 * [Setting up the development environment](#setting-up-the-development-environment)
-* [Adding packages as dependencies](#adding-packages-as-dependencies)
 * [Run the application](#run-the-application)
+* [Webpack](#webpack)
+* [Code structure](#code-structure)
 * [Versioning](#versioning)
 * [Creators](#creators)
 * [Copyright and licence](#copyright-and-licence)
@@ -35,17 +36,44 @@ npm start
 
 To build the app, we use *Webpack*. It's a module bundler for modern Javascript applications.
 We use it for many things :
-- Transpile Javascript with [Babel](https://babeljs.io/) 
+- Transpile Javascript with [Babel](https://babeljs.io/)
 - Compile [Sass](http://sass-lang.com/) files.
 - Create one *.css* file from all the *.scss* files.
 - Minify *.js* files
 - Minify *.css* files
 - Build the React.js files into one big file.
-- Run a [dev server](https://www.npmjs.com/package/webpack-dev-server) 
+- Run a [dev server](https://www.npmjs.com/package/webpack-dev-server)
 
 All of this is done automaticaly when you run ***npm start*** to run the app.
 
 For more details, [see the webpack documentation](https://webpack.js.org/)
+
+## Code structure
+
+All the source code of the app is in the */src* folder.
+
+### Main files
+
+At the root of the */src* folder, you can find 2 files.
+
+#### index.html
+
+This is the html page of the app. In this file, there is a *<div>* with the *app* id. This *<div>* is where we are going to mount our React app.
+All the scripts and css files are included automaticaly by webpack during the build.
+
+#### index.js
+
+In this file, we tell that we want to render the React app in the *<div>* with the *app* id of the html file.
+- *MuiThemeProvider* is the required component to use material-ui (see the material-ui documentation for more about it).
+- *BrowserRouter* is required to use react-router-dom
+- *App* is the main component of our app.
+
+### The App component
+
+It can be found at this path: */src/components/App.jsx*.
+This is where we put all the content. You can see the *AppBar* and a *Switch*.
+This *Switch* component is part of *react-router-dom*. It will load a component depending of the current app route.
+These components are in the */src/components/pages* folder.
 
 ## Versioning
 
