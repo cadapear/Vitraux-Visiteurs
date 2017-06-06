@@ -8,6 +8,7 @@ and history of stained-glass windows in Troyes, France.
 * [Setting up the development environment](#setting-up-the-development-environment)
 * [Run the application](#run-the-application)
 * [Webpack](#webpack)
+* [Development prerequisites](#development-prerequisites)
 * [Code structure](#code-structure)
 * [Versioning](#versioning)
 * [Creators](#creators)
@@ -19,7 +20,6 @@ and history of stained-glass windows in Troyes, France.
 2. Open command line
 3. Go to project root folder
 4. Run the following command to install project dependencies:
-
 ```
 npm install
 ```
@@ -48,25 +48,46 @@ All of this is done automaticaly when you run ***npm start*** to run the app.
 
 For more details, [see the webpack documentation](https://webpack.js.org/)
 
+## Development prerequisites
+
+### You must know
+
+To understand the source code, you must learn these things :
+- [Javascript](https://www.w3schools.com/js/) Because the app is coded in Javascript
+- [ES6 javascript syntax](https://www.tutorialspoint.com/es6/index.htm)
+- [React.js](https://facebook.github.io/react/) A javascript library for building user interfaces
+
+### You must take a look at
+
+You are going to use these tools. So you need to understand a bit how they work :
+- [React Router](https://reacttraining.com/react-router/) A router for React.js apps
+- [material-ui](http://www.material-ui.com/#/) A set of React Components that implement Google's material design
+
+### You should take a look at
+
+All the config is done. But if you want to know how it works :
+- [Webpack](https://webpack.js.org/concepts/) A module bundler for modern Javascript applications.
+- [Babel.js](https://babeljs.io/) A Javascript transpiler
+
 ## Code structure
 
-All the source code of the app is in the */src* folder.
+All the source code of the app is in the **/src** folder.
 
 ### Main files
 
-At the root of the */src* folder, you can find 2 files.
+At the root of the **/src** folder, you can find 2 files.
 
 #### index.html
 
-This is the html page of the app. In this file, there is a *<div>* with the *app* id. This *<div>* is where we are going to mount our React app.
+This is the html page of the app. In this file, there is a ***div*** with the **app** id. This ***div*** is where we are going to mount our React app.
 All the scripts and css files are included automaticaly by webpack during the build.
 
 #### index.js
 
-In this file, we tell that we want to render the React app in the *<div>* with the *app* id of the html file.
-- *MuiThemeProvider* is the required component to use material-ui (see the material-ui documentation for more about it).
-- *BrowserRouter* is required to use react-router-dom
-- *App* is the main component of our app.
+In this file, we tell that we want to render the React app in the ***div*** with the **app** id of the html file.
+- ***MuiThemeProvider*** is the required component to use ***material-ui*** (see the [material-ui documentation](http://www.material-ui.com/) for more about it).
+- ***BrowserRouter*** is required to use [react-router-dom](https://reacttraining.com/react-router/)
+- ***App*** is the main component of our app.
 
 ### The App component
 
@@ -103,5 +124,4 @@ This is a school project for the [University of Technology of Troyes
 
 ## Copyright and licence
 
-Code and documentation copyright 2016 Hypertopic.  
-// TO DO - Project licence.
+Code and documentation copyright 2016 Hypertopic.
