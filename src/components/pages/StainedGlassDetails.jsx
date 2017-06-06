@@ -42,7 +42,6 @@ export default class stainedGlassDetails extends React.Component {
     }
 
     this.setState({stainedGlass});
-    console.log(this.state.stainedGlass);
   }
 
   render() {
