@@ -69,6 +69,13 @@ All the config is done. But if you want to know how it works :
 - [Webpack](https://webpack.js.org/concepts/) A module bundler for modern Javascript applications.
 - [Babel.js](https://babeljs.io/) A Javascript transpiler
 
+## Hypertopic
+
+[Hypertopic documention](https://github.com/Hypertopic/Protocol/blob/master/README.md)  
+This is the protocol we use to fetch data bout stained glasses.
+
+Look at **/src/config/constants.js** to see the API and endpoints we use and the ressource we fetch in Vitraux Visiteurs.
+
 ## Code structure
 
 All the source code of the app is in the **/src** folder.
@@ -95,6 +102,25 @@ It can be found at this path: */src/components/App.jsx*.
 This is where we put all the content. You can see the *AppBar* and a *Switch*.
 This *Switch* component is part of *react-router-dom*. It will load a component depending of the current app route.
 These components are in the */src/components/pages* folder.
+
+### Stores
+
+It's a concept from the React **Flux** archirecture of Facebook. (you can find the official documentation of Flux [here](https://github.com/facebook/flux)).
+
+In our web app, we need the same data in different places (in different components). But we don't want to make a request to get the data each time we need them ! We want to make the requests once, the first time we need them.
+
+Stores are the solution.  
+They are ES6 classes, that make a **GET** request to fetch the data when they are instanciated. As the app is a single page app, these instances are alive until we close the app. So the data are available until the app is closed.
+
+On request response, the data are saved in the stores (as classe attributs), and we tell to the listening components that the store's data have changed by emmiting an event : **this.emitChange()** (look at **/src/stores/BaseStore.js** for more about it).
+
+The components get their data from stores.
+
+### Services
+
+The way we fetch data should be delegated. Components or stores don't fetch data from server or other, they delegate such tasks to services.
+
+In our case, our services make **GET** requests to the hypertopic API. Our stores use services to retrieve their data.
 
 ## Versioning
 
