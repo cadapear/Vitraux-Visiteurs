@@ -126,7 +126,7 @@ export default class Path extends React.Component {
      * @returns {Array}
      */
     _getStainedGlasses(topicId) {
-        let stainedGlasses = this.state.topics[topicId].items;
+        let stainedGlasses = this.state.topics[topicId].items.map(item => this._findItemInCorpus(item));
         let topicsQueue = this.state.topics[topicId].narrowers.slice();
 
         // continue while there is a topic in the queue
