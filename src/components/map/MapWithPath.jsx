@@ -10,7 +10,9 @@ export default class MapWithPath extends React.Component {
       map: null,
       path: props.path
     }
-    this._setMarkers = this._setMarkers.bind(this)
+    this._setMarker = this._setMarker.bind(this)
+    this._getWaypoints = this._getWaypoints.bind(this)
+    this._setRoute = this._setRoute.bind(this)
   }
 
   componentWillReceiveProps (nextProps) {
@@ -30,20 +32,54 @@ export default class MapWithPath extends React.Component {
 
       // init the map
       const map = new google.maps.Map(document.getElementById('map'), options)
-      this._setMarkers(map)
-      this.setState({ map })
+      return this._getWaypoints(map)
+        .then(waypoints => Promise.all(waypoints.map(waypoint => this._setMarker(map, waypoint)))
+          .then(() => this._setRoute(map, waypoints))
+        )
+        .then(() => this.setState({ map }))
     })
   }
 
-  _setMarkers(map) {
-    this.state.path.map(element =>
-      Request(`https://maps.googleapis.com/maps/api/geocode/json?address=${element.spatial[0]}&key=AIzaSyAtu5-1cj7wJeCiUVC0zhIbWHDtee4fDlo`, (error, response, body) => {
-        const coordinates = JSON.parse(body).results[ 0 ].geometry.location
-        new google.maps.Marker({
-          position: coordinates,
-          map: map,
-          label: element.name[ 0 ]
+  _getWaypoints (map) {
+    return Promise.all(this.state.path.map(element => {
+      return new Promise((resolve, reject) =>
+        Request(`https://maps.googleapis.com/maps/api/geocode/json?address=${element.spatial[ 0 ]}&key=AIzaSyAtu5-1cj7wJeCiUVC0zhIbWHDtee4fDlo`, (error, response, body) => {
+          resolve({
+            name: element.name[ 0 ],
+            coordinates: JSON.parse(body).results[ 0 ].geometry.location
+          })
         })
+      )
+    }))
+  }
+
+  _setMarker (map, waypoint) {
+    return new Promise((resolve, reject) => {
+      const marker = new google.maps.Marker({
+        position: waypoint.coordinates,
+        map: map,
+        label: waypoint.name
+      })
+      resolve(marker)
+    })
+  }
+
+  _setRoute (map, waypoints) {
+    const googleDirectionService = new google.maps.DirectionsService()
+    const googleDirectionRenderer = new google.maps.DirectionsRenderer({ map })
+
+    const options = {
+      origin: waypoints[ 0 ].coordinates,
+      destination: waypoints[ 0 ].coordinates,
+      waypoints: waypoints.map(waypoint => ({ location: waypoint.coordinates })),
+      travelMode: google.maps.DirectionsTravelMode.WALKING,
+      optimizeWaypoints: true
+    }
+
+    console.log(options)
+
+    return new Promise((resolve, reject) => googleDirectionService.route(options, (direction, requestStatus) => {
+        if (requestStatus == google.maps.DirectionsStatus.OK) googleDirectionRenderer.setDirections(direction)
       })
     )
   }
