@@ -101,7 +101,7 @@ export default class Path extends React.Component {
      * Redirect the user to the page where he can see the details of his path
      */
     _showMyPath() {
-        this.props.history.push('/mypath');
+        this.props.history.push('/my-path');
     }
 
     /**
