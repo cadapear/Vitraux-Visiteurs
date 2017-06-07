@@ -42,13 +42,9 @@ html, body {
   height: 100%;
 }
 
-.inline-chip-container {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.inline-chip {
-  margin: 4px;
+.path-chip {
+  padding: 4px !important;
+  margin: 5px 0 !important;
 }
 
 #map {

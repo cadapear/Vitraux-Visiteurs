@@ -37,8 +37,8 @@ export default class stainedGlassDetails extends React.Component {
     const stainedGlass = CorpusStore.findById(this.props.match.params.id);
 
     if (stainedGlass) {
-      // get the topics name of this stainedGlass
-      stainedGlass.topic = stainedGlass.topic.map(topic => ViewpointStore.topics[topic.id]);
+      // get all the possible topic paths for this stained glass
+      stainedGlass.topic = stainedGlass.topic.map(topic => ViewpointStore.getTopicPath(topic.id));
     }
 
     this.setState({stainedGlass});
@@ -60,9 +60,9 @@ export default class stainedGlassDetails extends React.Component {
             <h1>{this.state.stainedGlass.name[0]}</h1>
             <div>
               <h2>Topics</h2>
-              <div className="inline-chip-container">
+              <div>
                 {
-                  this.state.stainedGlass.topic.map(topic => <Chip key={topic.name} className="inline-chip">{topic.name}</Chip>)
+                  this.state.stainedGlass.topic.map(topic => <Chip className="path-chip" key={topic}>{topic}</Chip>)
                 }
               </div>
             </div>

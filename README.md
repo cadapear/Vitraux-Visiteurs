@@ -74,7 +74,7 @@ All the config is done. But if you want to know how it works :
 [Hypertopic documention](https://github.com/Hypertopic/Protocol/blob/master/README.md)  
 This is the protocol we use to fetch data bout stained glasses.
 
-Look at **/src/config/constants.js** to see the API and endpoints we use and the ressource we fetch in Vitraux Visiteurs.
+Look at **/src/config/constants.js** to see the API and endpoints we use and the ressource we fetch in Vitraux Visiteurs.S
 
 ## Code structure
 

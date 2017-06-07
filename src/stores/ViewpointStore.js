@@ -21,6 +21,23 @@ class ViewpointStore extends BaseStore {
   }
 
   /**
+   * Get the path for a given topic
+   */
+  getTopicPath(topicId) {
+    const topicsId = Object.keys(this._topics);
+
+    let name = this._topics[topicId].name;
+
+    for (let id of topicsId) {
+      if (this._topics[id].narrowers.includes(topicId)) {
+        name = this.getTopicPath(id) + ' > ' + name;
+      }
+    }
+
+    return name;
+  }
+
+  /**
    * Use the ViewpointService to init the store data
    */
   _init() {
