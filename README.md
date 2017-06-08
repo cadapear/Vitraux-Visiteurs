@@ -7,39 +7,45 @@ and history of stained-glass windows in Troyes, France.
 
 * [Setting up the development environment](#setting-up-the-development-environment)
 * [Adding packages as dependencies](#adding-packages-as-dependencies)
-* [Using Grunt](#using-grunt)
+* [Run the application](#run-the-application)
 * [Versioning](#versioning)
 * [Creators](#creators)
 * [Copyright and licence](#copyright-and-licence)
 
 ## Setting up the development environment
 
-1. [Install Bower](http://bower.io/#install-bower)
+1. Install [Node.js](https://nodejs.org/en/)
 2. Open command line
 3. Go to project root folder
 4. Run the following command to install project dependencies:
 
 ```
-bower install
+npm install
 ```
 
-## Adding packages as dependencies
+## Run the application
 
-You can search packages [here](https://bower.io/search/) and install them with the following command:
-
+1. In the project root folder, run this command
 ```
-bower install <package> --save
+npm start
 ```
+2. Open your browser, and go to [localhost:8080](localhost:8080).
 
-Care to know more about Bower? [Bower docs](http://bower.io/docs/api/)
+## Webpack
 
+To build the app, we use *Webpack*. It's a module bundler for modern Javascript applications.
+We use it for many things :
+- Transpile Javascript with [Babel](https://babeljs.io/) 
+- Compile [Sass](http://sass-lang.com/) files.
+- Create one *.css* file from all the *.scss* files.
+- Minify *.js* files
+- Minify *.css* files
+- Build the React.js files into one big file.
+- Run a [dev server](https://www.npmjs.com/package/webpack-dev-server) 
 
-## Using Grunt
+All of this is done automaticaly when you run ***npm start*** to run the app.
 
-If you want to configure or use the project tasks, [install Grunt](http://gruntjs.com/getting-started)
-The Gruntfile.js is setup to launch the following task(s) with the `grunt` command:
-
-* [Uglify](https://github.com/gruntjs/grunt-contrib-uglify) to compress and mangle javascript files into vitraux-visiteurs.min.js
+For more details, [see the webpack documentation](https://webpack.js.org/)
 
 ## Versioning
 

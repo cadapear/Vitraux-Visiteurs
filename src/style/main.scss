@@ -1,0 +1,67 @@
+/*
+    Created on : 26 mai 2016, 20:10:40
+    Author     : Yassine Doghri <http://yassine.doghri.fr>
+*/
+
+@import "pages/courses";
+@import "pages/description";
+@import "pages/explore";
+@import "pages/preview";
+
+* {
+  font-family: "Roboto";
+}
+
+/**
+ * .container-hide can be used to keep height:100%
+ * under a fixed element like .main
+ */
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+/**
+ * Container under the appbar
+ */
+.app-container {
+  top: 64px;
+  width: 100%;
+  position: fixed;
+  bottom: 0px;
+  overflow: auto;
+}
+
+.stainedGlass-image-container {
+  height: 100%;
+  text-align: center;
+}
+
+.stainedGlass-image {
+  max-height: 100%;
+  height: auto;
+  max-width: 100%;
+  width: auto;
+}
+
+.fullheight {
+  height: 100%;
+}
+
+.inline-chip-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.inline-chip {
+  margin: 4px;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+}

@@ -1,0 +1,56 @@
+/* 
+    Created on : 10 juin 2016, 00:54:33
+    Author     : Maxime Couture
+*/
+
+.social{
+    display: inline-block;
+    vertical-align: middle;
+    width: 50%;
+    height: auto;
+    text-align: center;
+
+    span.fa {
+        margin-left: 10px;
+    }
+}
+
+#vitrail-thumbnail {
+    position: relative;
+    text-align: center;
+    display: inline-block;
+    width: 50%;
+    height: auto;
+    vertical-align: middle;
+
+    span.fa {
+        color: rgba(#fff, 0.8);
+        text-shadow: 0 0 5px rgba(#000, 0.8);
+        position: absolute;
+        bottom: 10px;
+        text-align: right;
+        padding-right: 5px;
+        width: 100%;
+    }
+
+    .thumbnail {
+        width: 100%;
+    }
+}
+
+.description {
+    text-align: justify;
+}
+
+#vitrailModal {
+
+    #vitrail-resource {
+        width: 100%;
+    }
+
+    a.btn {
+        position: absolute;
+        bottom: 0;
+        margin: 0;
+    }
+}
