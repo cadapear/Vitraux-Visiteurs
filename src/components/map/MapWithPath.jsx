@@ -1,5 +1,25 @@
 import React from 'react'
 import Request from 'request'
+import Chip from 'material-ui/Chip'
+
+const getCourseDuration = (total_sec) => {
+  var jour = Math.floor(total_sec / (24 * 3600))
+  total_sec = total_sec - (jour * 24 * 3600)
+  var heure = Math.floor(total_sec / 3600)
+  total_sec = total_sec - (heure * 3600)
+  var minute = Math.floor(total_sec / 60)
+  heure = heure + (jour * 24)
+
+  return heure + ' heures et ' + minute + " minutes"
+}
+
+const chipStyle = {
+  position: "fixed",
+  bottom: 0,
+  zIndex: 1,
+  backgroundColor: "white",
+  left: "40%"
+}
 
 export default class MapWithPath extends React.Component {
 
@@ -9,7 +29,9 @@ export default class MapWithPath extends React.Component {
     this.state = {
       map: null,
       path: props.path,
-      currentPosition: null
+      currentPosition: null,
+      duration: 0,
+      distance: 0
     }
     this._setMarker = this._setMarker.bind(this)
     this._getWaypoints = this._getWaypoints.bind(this)
@@ -24,7 +46,7 @@ export default class MapWithPath extends React.Component {
   _updateCurrentPosition () {
     return new Promise((resolve, reject) => navigator.geolocation.getCurrentPosition(pos => {
       const currentPosition = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude)
-      this.setState({ currentPosition})
+      this.setState({ currentPosition })
       resolve(pos)
     }, reject))
   }
@@ -81,21 +103,34 @@ export default class MapWithPath extends React.Component {
 
     const options = {
       origin: this.state.currentPosition,
-      destination: waypoints[waypoints.length - 1].coordinates,
+      destination: waypoints[ waypoints.length - 1 ].coordinates,
       waypoints: waypoints.map(waypoint => ({ location: waypoint.coordinates })),
       travelMode: google.maps.DirectionsTravelMode.WALKING,
       optimizeWaypoints: true
     }
 
     return new Promise((resolve, reject) => googleDirectionService.route(options, (direction, requestStatus) => {
-        if (requestStatus == google.maps.DirectionsStatus.OK) googleDirectionRenderer.setDirections(direction)
+        let duration = 0
+        let distance = 0
+        if (requestStatus == google.maps.DirectionsStatus.OK) {
+          googleDirectionRenderer.setDirections(direction)
+          direction.routes[ 0 ].legs.map(element => {
+            duration += element.duration.value
+            distance += element.distance.value
+          })
+          this.setState({ duration, distance })
+        }
       })
     )
   }
 
   render () {
     return (
-      <div id="map"></div>
+      <div className="fullheight">
+        <Chip style={chipStyle}>Distance: {Math.ceil(this.state.distance / 1000)} -
+          Durée: {getCourseDuration(this.state.duration)}</Chip>
+        <div id="map"></div>
+      </div>
     )
   }
 
