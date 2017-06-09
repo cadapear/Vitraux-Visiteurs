@@ -10,6 +10,7 @@ and history of stained-glass windows in Troyes, France.
 * [Webpack](#webpack)
 * [Development prerequisites](#development-prerequisites)
 * [Code structure](#code-structure)
+* [App theme](#app-theme)
 * [Versioning](#versioning)
 * [Creators](#creators)
 * [Copyright and licence](#copyright-and-licence)
@@ -121,6 +122,10 @@ The components get their data from stores.
 The way we fetch data should be delegated. Components or stores don't fetch data from server or other, they delegate such tasks to services.
 
 In our case, our services make **GET** requests to the hypertopic API. Our stores use services to retrieve their data.
+
+## App theme
+
+Vitraux Visiteur uses [material-ui](http://www.material-ui.com/) to implement Google's material design. You can customise the Material ui theme by changing the colors in **/src/config/theme.js**.
 
 ## Versioning
 
