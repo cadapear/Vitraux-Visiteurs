@@ -27,8 +27,7 @@ export default class Dashboard extends React.Component {
     render() {
         return (
             <div>
-                <center><h2>Dashboard</h2></center>
-
+              
                 <Row>
                     <Col xs={12} sm={3}>
 
