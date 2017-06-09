@@ -27,6 +27,7 @@ export default class Dashboard extends React.Component {
     render() {
         return (
             <div>
+<<<<<<< HEAD
               
                 <Row>
                     <Col xs={12} sm={3}>
@@ -39,37 +40,44 @@ export default class Dashboard extends React.Component {
                     </Link>
                     </Col>
                     <Col xs={12} sm={3}>
+=======
+                <Row className="dashboard-row" center="xs">
+                    <Col xs={6}>
+>>>>>>> 60c1812e9773a942644f70538caa9bd8e022e0ce
                         <Link to='/stained-glass'>
-                    <img src="http://localhost:8080/assets/img/search.ico" width="75px" height="75px" /> <br/>
-                    Vitraux
-                    </Link>
+                            <div>
+                                <img className="dashboard-icon" src="/assets/img/search.ico" />
+                            </div>
+                            Vitraux
+                        </Link>
                     </Col>
-                    <Col  xs={12} sm={3}>
-
-                    </Col>
-                </Row>
-                <Row>
-                    <Col xs={12} sm={3}>
-
-                    </Col>
-                    <Col  xs={12} sm={3}>
-                    <Link to='/badge'>
-                    <img src="http://localhost:8080/assets/img/badge.png" width="75px" height="75px" /> <br/>
-                    Mes badges
-                    </Link>
-                    </Col>
-                    <Col xs={12} sm={3}>
-                    <Link to='/history'>
-                    <img src="http://localhost:8080/assets/img/history.png" width="75px" height="75px" /> <br/>
-                    Mon historique
-                    </Link>
-                    </Col>
-                    <Col  xs={12} sm={3}>
-
+                    <Col xs={6}>
+                        <Link to='/my-path'>
+                            <div>
+                                <img className="dashboard-icon" src="/assets/img/map.png" />
+                            </div>
+                            Mon parcours
+                        </Link>
                     </Col>
                 </Row>
-
-
+                <Row className="dashboard-row" center="xs">
+                    <Col xs={6}>
+                        <Link to='/badge'>
+                            <div>
+                                <img className="dashboard-icon" src="/assets/img/badge.png" />
+                            </div>
+                            Mes badges
+                        </Link>
+                    </Col>
+                    <Col xs={6}>
+                        <Link to='/history'>
+                            <div>
+                                <img className="dashboard-icon" src="/assets/img/history.png" />
+                            </div>
+                            Mon historique
+                        </Link>
+                    </Col>
+                </Row>
             </div>
         )
     }
