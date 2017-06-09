@@ -66,6 +66,7 @@ This is a school project for the [University of Technology of Troyes
 * [Nora Ouelasri](https://github.com/ouelasrn)
 * [Imane Tarchoun](https://github.com/imaneIT)
 * [Damien Brandao](https://github.com/brandaod)
+* [Van Phuc Le](https://github.com/vanphucle)
 
 ## Copyright and licence
 
