@@ -8,15 +8,25 @@ export default class MapWithPath extends React.Component {
 
     this.state = {
       map: null,
-      path: props.path
+      path: props.path,
+      currentPosition: null
     }
     this._setMarker = this._setMarker.bind(this)
     this._getWaypoints = this._getWaypoints.bind(this)
     this._setRoute = this._setRoute.bind(this)
+    this._updateCurrentPosition = this._updateCurrentPosition.bind(this)
   }
 
   componentWillReceiveProps (nextProps) {
     this.setState({ path: nextProps.path })
+  }
+
+  _updateCurrentPosition () {
+    return new Promise((resolve, reject) => navigator.geolocation.getCurrentPosition(pos => {
+      const currentPosition = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude)
+      this.setState({ currentPosition})
+      resolve(pos)
+    }, reject))
   }
 
   componentDidMount () {
@@ -32,7 +42,8 @@ export default class MapWithPath extends React.Component {
 
       // init the map
       const map = new google.maps.Map(document.getElementById('map'), options)
-      return this._getWaypoints(map)
+      return this._updateCurrentPosition()
+        .then(() =>this._getWaypoints(map))
         .then(waypoints => Promise.all(waypoints.map(waypoint => this._setMarker(map, waypoint)))
           .then(() => this._setRoute(map, waypoints))
         )
@@ -40,7 +51,7 @@ export default class MapWithPath extends React.Component {
     })
   }
 
-  _getWaypoints (map) {
+  _getWaypoints () {
     return Promise.all(this.state.path.map(element => {
       return new Promise((resolve, reject) =>
         Request(`https://maps.googleapis.com/maps/api/geocode/json?address=${element.spatial[ 0 ]}&key=AIzaSyAtu5-1cj7wJeCiUVC0zhIbWHDtee4fDlo`, (error, response, body) => {
@@ -69,14 +80,12 @@ export default class MapWithPath extends React.Component {
     const googleDirectionRenderer = new google.maps.DirectionsRenderer({ map })
 
     const options = {
-      origin: waypoints[ 0 ].coordinates,
-      destination: waypoints[ 0 ].coordinates,
+      origin: this.state.currentPosition,
+      destination: waypoints[waypoints.length - 1].coordinates,
       waypoints: waypoints.map(waypoint => ({ location: waypoint.coordinates })),
       travelMode: google.maps.DirectionsTravelMode.WALKING,
       optimizeWaypoints: true
     }
-
-    console.log(options)
 
     return new Promise((resolve, reject) => googleDirectionService.route(options, (direction, requestStatus) => {
         if (requestStatus == google.maps.DirectionsStatus.OK) googleDirectionRenderer.setDirections(direction)
