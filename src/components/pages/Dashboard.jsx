@@ -27,8 +27,23 @@ export default class Dashboard extends React.Component {
     render() {
         return (
             <div>
+<<<<<<< HEAD
+              
+                <Row>
+                    <Col xs={12} sm={3}>
+
+                    </Col>
+                    <Col xs={12} sm={3}>
+                        <Link to='/my-path'>
+                        <img src="http://localhost:8080/assets/img/map.png" width="75px" height="75px" /> <br/>
+                        Mon parcours
+                    </Link>
+                    </Col>
+                    <Col xs={12} sm={3}>
+=======
                 <Row className="dashboard-row" center="xs">
                     <Col xs={6}>
+>>>>>>> 60c1812e9773a942644f70538caa9bd8e022e0ce
                         <Link to='/stained-glass'>
                             <div>
                                 <img className="dashboard-icon" src="/assets/img/search.ico" />
