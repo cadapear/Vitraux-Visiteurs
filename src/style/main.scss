@@ -52,8 +52,31 @@ html, body {
   height: 100%;
 }
 
-.dashboard-row {
-    margin-top: 50px;
+.dashboard {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 50% 50%;
+}
+
+.dashboard-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dashboard-item:hover {
+    background: #ECEFF1;
+    cursor: pointer;
+}
+
+.fade {
+    -webkit-transition: background-color 500ms linear;
+    -ms-transition: background-color 500ms linear;
+    transition: background-color 500ms linear;
+}
+
+.dashboard-item-link {
+    display: inline-block;
 }
 
 .dashboard-icon {

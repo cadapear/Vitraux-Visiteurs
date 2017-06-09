@@ -6,63 +6,53 @@ import RaisedButton from 'material-ui/RaisedButton';
 import ActionAndroid from 'material-ui/svg-icons/action/android';
 import FontIcon from 'material-ui/FontIcon';
 
-const styles = {
-    button: {
-        margin: 12,
-    },
-    exampleImageInput: {
-        cursor: 'pointer',
-        position: 'absolute',
-        top: 0,
-        bottom: 0,
-        right: 0,
-        left: 0,
-        width: '100%',
-        opacity: 0,
-    },
-};
-
 export default class Dashboard extends React.Component {
+
+    constructor(props) {
+        super(props);
+
+        this._redirect = this._redirect.bind(this);
+    }
+
+    _redirect(route) {
+        this.props.history.push(route);
+    }
 
     render() {
         return (
-            <div>
-                <Row className="dashboard-row" center="xs">
-                    <Col xs={6}>
-                        <Link to='/stained-glass'>
-                            <div>
-                                <img className="dashboard-icon" src="/assets/img/search.ico" />
-                            </div>
-                            Vitraux
-                        </Link>
-                    </Col>
-                    <Col xs={6}>
-                        <Link to='/my-path'>
-                            <div>
-                                <img className="dashboard-icon" src="/assets/img/map.png" />
-                            </div>
-                            Mon parcours
-                        </Link>
-                    </Col>
-                </Row>
-                <Row className="dashboard-row" center="xs">
-                    <Col xs={6}>
-                        <Link to='/badge'>
-                            <div>
-                                <img className="dashboard-icon" src="/assets/img/badge.png" />
-                            </div>
-                            Mes badges
-                        </Link>
-                    </Col>
-                    <Col xs={6}>
-                        <Link to='/history'>
-                            <div>
-                                <img className="dashboard-icon" src="/assets/img/history.png" />
-                            </div>
-                            Mon historique
-                        </Link>
-                    </Col>
-                </Row>
+            <div className="fullheight dashboard">
+                <div className="dashboard-item fade" onClick={_ => this._redirect('/stained-glass')}>
+                    <div className="dashboard-item-link">
+                        <div>
+                            <img className="dashboard-icon" src="/assets/img/search.ico" />
+                        </div>
+                        Vitraux
+                    </div>
+                </div>
+                <div className="dashboard-item fade" onClick={_ => this._redirect('/my-path')}>
+                    <div className="dashboard-item-link">
+                        <div>
+                            <img className="dashboard-icon" src="/assets/img/map.png" />
+                        </div>
+                        Mon parcours
+                    </div>
+                </div>
+                <div className="dashboard-item fade" onClick={_ => this._redirect('/badge')}>
+                    <div className="dashboard-item-link">
+                        <div>
+                            <img className="dashboard-icon" src="/assets/img/badge.png" />
+                        </div>
+                        Mes badges
+                    </div>
+                </div>
+                <div className="dashboard-item fade" onClick={_ => this._redirect('/history')}>
+                    <div className="dashboard-item-link">
+                        <div>
+                            <img className="dashboard-icon" src="/assets/img/history.png" />
+                        </div>
+                        Mon historique
+                    </div>
+                </div>
             </div>
         )
     }
