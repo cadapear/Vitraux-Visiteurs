@@ -6,6 +6,11 @@ import RaisedButton from 'material-ui/RaisedButton';
 import ActionAndroid from 'material-ui/svg-icons/action/android';
 import FontIcon from 'material-ui/FontIcon';
 
+import SearchIcon from 'material-ui/svg-icons/action/search';
+import MapIcon from 'material-ui/svg-icons/maps/map';
+import BadgesIcon from 'material-ui/svg-icons/social/poll';
+import HistoryIcon from 'material-ui/svg-icons/action/history';
+
 export default class Dashboard extends React.Component {
 
     constructor(props) {
@@ -24,33 +29,35 @@ export default class Dashboard extends React.Component {
                 <div className="dashboard-item fade" onClick={_ => this._redirect('/stained-glass')}>
                     <div className="dashboard-item-link">
                         <div>
-                            <img className="dashboard-icon" src="/assets/img/search.ico" />
+                            <SearchIcon className="dashboard-icon" />
                         </div>
-                        Vitraux
+                        <div className="dashboard-label">
+                            Vitraux
+                        </div>
                     </div>
                 </div>
-                <div className="dashboard-item fade" onClick={_ => this._redirect('/my-path')}>
+                <div className="dashboard-item fade border-left" onClick={_ => this._redirect('/my-path')}>
                     <div className="dashboard-item-link">
-                        <div>
-                            <img className="dashboard-icon" src="/assets/img/map.png" />
+                        <MapIcon className="dashboard-icon" />
+                        <div className="dashboard-label">
+                            Mon parcours
                         </div>
-                        Mon parcours
                     </div>
                 </div>
-                <div className="dashboard-item fade" onClick={_ => this._redirect('/badge')}>
+                <div className="dashboard-item fade border-top" onClick={_ => this._redirect('/badge')}>
                     <div className="dashboard-item-link">
-                        <div>
-                            <img className="dashboard-icon" src="/assets/img/badge.png" />
+                        <BadgesIcon className="dashboard-icon" />
+                        <div className="dashboard-label">
+                            Mes badges
                         </div>
-                        Mes badges
                     </div>
                 </div>
-                <div className="dashboard-item fade" onClick={_ => this._redirect('/history')}>
+                <div className="dashboard-item fade border-top border-left" onClick={_ => this._redirect('/history')}>
                     <div className="dashboard-item-link">
-                        <div>
-                            <img className="dashboard-icon" src="/assets/img/history.png" />
+                        <HistoryIcon className="dashboard-icon" />
+                        <div className="dashboard-label">
+                            Mon historique
                         </div>
-                        Mon historique
                     </div>
                 </div>
             </div>
