@@ -29,19 +29,19 @@ export default class Dashboard extends React.Component {
             <div>
                 <Row className="dashboard-row" center="xs">
                     <Col xs={6}>
-                        <Link to='/my-path'>
-                            <div>
-                                <img className="dashboard-icon" src="/assets/img/map.png" />
-                            </div>
-                            Mon parcours
-                        </Link>
-                    </Col>
-                    <Col xs={6}>
                         <Link to='/stained-glass'>
                             <div>
                                 <img className="dashboard-icon" src="/assets/img/search.ico" />
                             </div>
                             Vitraux
+                        </Link>
+                    </Col>
+                    <Col xs={6}>
+                        <Link to='/my-path'>
+                            <div>
+                                <img className="dashboard-icon" src="/assets/img/map.png" />
+                            </div>
+                            Mon parcours
                         </Link>
                     </Col>
                 </Row>
