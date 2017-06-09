@@ -21,6 +21,7 @@ class ViewpointStore extends BaseStore {
   }
 
   /**
+<<<<<<< HEAD
    * Get the path for a given topic
    */
   getTopicPath(topicId) {
@@ -38,6 +39,8 @@ class ViewpointStore extends BaseStore {
   }
 
   /**
+=======
+>>>>>>> 5151461be7b3abd08b7246c74cb971cc2d562956
    * Use the ViewpointService to init the store data
    */
   _init() {

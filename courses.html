@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Vitraux Visiteurs</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="icon" href="assets/img/favicon.ico" />
+
+        <link rel="stylesheet" href="node_modules/ratchet-npm/dist/css/ratchet.min.css">
+        <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
+        <link rel="stylesheet" href="node_modules/roboto-fontface/css/roboto/roboto-fontface.css" />
+        <link rel="stylesheet" href="assets/css/main.css">
+    </head>
+    <body>
+        <header class="bar bar-nav">
+            <h1 class="title">Vitraux Visiteurs <span id="courses-num" class="badge">0</span></h1>
+        </header>
+        <div id="courses" class="content">
+            <div class="search-bar">
+                <input type="search" class="search" placeholder="Rechercher un thème, une époque...">
+                <span class="fa fa-search" aria-hidden="true"></span>
+            </div>
+            <ul class="table-view list"></ul>
+        </div>
+
+        <script src="node_modules/jquery/dist/jquery.min.js"></script>
+        <script src="node_modules/ratchet-npm/dist/js/ratchet.min.js"></script>
+        <script src="node_modules/list.js/dist/list.min.js"></script>
+        <script src="assets/js/vitraux-visiteurs.min.js"></script>
+    </body>
+</html>

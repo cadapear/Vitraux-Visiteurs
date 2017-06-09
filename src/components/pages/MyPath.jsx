@@ -23,7 +23,7 @@ export default class MyPath extends React.Component {
      * Redirect the user to the path building page
      */
     _redirectToPathHome() {
-        this.props.history.push('/')
+        this.props.history.push('/');
     }
 
     render() {

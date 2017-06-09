@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "build": "./node_modules/webpack/bin/webpack.js",
-    "start": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --hot --progress --colors --inline"
+    "start": "node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --hot --progress --colors --inline"
   },
   "devDependencies": {
     "babel-core": "^6.24.1",
