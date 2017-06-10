@@ -5,6 +5,11 @@ import Map from '../map/Map.jsx';
 
 import Chip from 'material-ui/Chip';
 import CircularProgress from 'material-ui/CircularProgress';
+import RaisedButton from 'material-ui/RaisedButton';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+
+import ArrowUp from 'material-ui/svg-icons/hardware/keyboard-arrow-up';
+import PlaceIcon from 'material-ui/svg-icons/maps/place';
 
 import CorpusStore from '../../stores/CorpusStore';
 import ViewpointStore from '../../stores/ViewpointStore';
@@ -47,8 +52,13 @@ export default class stainedGlassDetails extends React.Component {
   render() {
     if (!this.state.stainedGlass) {
       return (
-        <div>
-          <CircularProgress size={80} thickness={5} />
+        <div className="fullheight progress-container">
+            <div className="progress">
+                <CircularProgress size={80} thickness={5} />
+                <div>
+                    Chargement du vitrail...
+                </div>
+            </div>
         </div>
       )
     }
@@ -56,16 +66,33 @@ export default class stainedGlassDetails extends React.Component {
     return (
       <div className="fullheight">
         <Row className="fullheight">
-          <Col xs={12} sm={6}>
-            <h1>{this.state.stainedGlass.name[0]}</h1>
-            <div>
-              <h2>Topics</h2>
-              <div>
-                {
-                  this.state.stainedGlass.topic.map(topic => <Chip className="path-chip" key={topic}>{topic}</Chip>)
-                }
+          <Col xs={12} sm={6} className="details-col">
+              <div className="details-col-data">
+                  <h1 className="details-title" id="top">{this.state.stainedGlass.name[0]}</h1>
+                  <div className="details-block">
+                      <h2>Localisation</h2>
+                      {
+                          this.state.stainedGlass.spatial[0]
+                      }
+                      <div>
+                          <RaisedButton
+                            label="Voir sur la carte"
+                            labelPosition="before"
+                            secondary={true}
+                            icon={<PlaceIcon />}
+                            onClick={_ => document.getElementById("map").scrollIntoView()}
+                          />
+                      </div>
+                  </div>
+                  <div className="details-block">
+                    <h2>Topics</h2>
+                    <div>
+                      {
+                        this.state.stainedGlass.topic.map(topic => <Chip className="path-chip" key={topic}>{topic}</Chip>)
+                      }
+                    </div>
+                  </div>
               </div>
-            </div>
           </Col>
           <Col className="stainedGlass-image-container" xs={12} sm={6}>
             <img className="stainedGlass-image" src={this.state.stainedGlass.resource[0]} />
@@ -73,6 +100,13 @@ export default class stainedGlassDetails extends React.Component {
         </Row>
         <Row className="fullheight">
           <Map location={this.state.stainedGlass.spatial[0]} />
+          <FloatingActionButton
+              className="arrow-up-button"
+              secondary={true}
+              onClick={_ => document.getElementById("top").scrollIntoView()}
+          >
+              <ArrowUp />
+          </FloatingActionButton>
         </Row>
       </div>
     )

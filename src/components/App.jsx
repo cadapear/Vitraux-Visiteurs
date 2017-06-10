@@ -16,7 +16,7 @@ const styles = {
     color : 'white',
     fontSize :'35px',
     fontWeight :'bold'
-    
+
   },
 };
 
@@ -29,12 +29,9 @@ export default class App extends React.Component {
             <div>
                 <AppBar
                     title={<Link style={styles.title} to='/'>Vitraux visiteurs</Link>}
-                
                     iconElementLeft={<span></span>}
-                     
-      
                 />
-                <div className="app-container">
+            <div className="app-container">
                     <Switch>
                         <Route exact path='/' component={Dashboard}/>
                         <Route path='/stained-glass/:id' component={StainedGlassDetails}/>

@@ -1,4 +1,5 @@
 @import "pages/dashboard.scss";
+@import "pages/details.scss";
 
 * {
   font-family: "Roboto";
@@ -28,28 +29,16 @@ html, body {
   overflow: auto;
 }
 
-.stainedGlass-image-container {
-  height: 100%;
-  text-align: center;
-}
-
-.stainedGlass-image {
-  max-height: 100%;
-  height: auto;
-  max-width: 100%;
-  width: auto;
-}
-
 .fullheight {
   height: 100%;
 }
 
-.path-chip {
-  padding: 4px !important;
-  margin: 5px 0 !important;
+.progress-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-#map {
-  width: 100%;
-  height: 100%;
+.progress {
+    text-align: center;
 }
