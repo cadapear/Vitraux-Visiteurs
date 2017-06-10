@@ -65,7 +65,7 @@ export default class stainedGlassDetails extends React.Component {
 
     return (
       <div className="fullheight">
-        <Row className="fullheight">
+        <Row className="fullheight-row">
           <Col xs={12} sm={6} className="details-col">
               <div className="details-col-data">
                   <h1 className="details-title" id="top">{this.state.stainedGlass.name[0]}</h1>

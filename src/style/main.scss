@@ -18,6 +18,25 @@ html, body {
   width: 100%;
 }
 
+.fullheight {
+    height: 100%;
+}
+
+/**
+ * In case of Col in Row that have to be full height, we have to handle cases where the screen with is low (mobile for example)
+ * In these cases, the Col are not inline but have to be full height
+ */
+@media screen and (min-width: 768px) {
+    .fullheight-row {
+        height: 100%;
+    }
+}
+@media screen and (max-width: 768px) {
+    .fullheight-row > * {
+        height: 100%;
+    }
+}
+
 /**
  * Container under the appbar
  */
@@ -27,10 +46,6 @@ html, body {
   position: fixed;
   bottom: 0px;
   overflow: auto;
-}
-
-.fullheight {
-  height: 100%;
 }
 
 .progress-container {
