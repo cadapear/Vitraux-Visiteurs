@@ -1,5 +1,6 @@
 import React from 'react';
 import { Row, Col } from 'react-flexbox-grid';
+import { Link } from 'react-router-dom';
 
 import Map from '../map/Map.jsx';
 
@@ -72,40 +73,41 @@ export default class stainedGlassDetails extends React.Component {
             <div className="fullheight">
                 <Row className="fullheight-row">
                     <Col xs={12} sm={6} className="details-col">
-                        <div>
-                            <h1 className="details-title" id="top">{this.state.stainedGlass.name[0]}</h1>
-                            <div className="details-block">
-                                <h2>Localisation</h2>
+                        <h1 className="details-title" id="top">{this.state.stainedGlass.name[0]}</h1>
+                        <div className="go-back-link">
+                            <Link to="/stained-glass">Retour aux vitraux</Link>
+                        </div>
+                        <div className="details-block">
+                            <h2>Localisation</h2>
+                            {
+                                this.state.stainedGlass.spatial[0]
+                            }
+                            <div className="actions-container">
+                                <RaisedButton
+                                    label="Voir sur la carte"
+                                    labelPosition="before"
+                                    secondary={true}
+                                    icon={<PlaceIcon />}
+                                    onClick={_ => document.getElementById("map").scrollIntoView()}
+                                />
                                 {
-                                    this.state.stainedGlass.spatial[0]
-                                }
-                                <div className="actions-container">
+                                    this.state.chuchPlan &&
                                     <RaisedButton
-                                        label="Voir sur la carte"
+                                        label="Voir le plan du lieu"
                                         labelPosition="before"
-                                        secondary={true}
-                                        icon={<PlaceIcon />}
-                                        onClick={_ => document.getElementById("map").scrollIntoView()}
+                                        primary={true}
+                                        icon={<MapIcon />}
+                                        onClick={_ => document.getElementById("plan").scrollIntoView()}
                                     />
-                                    {
-                                        this.state.chuchPlan &&
-                                        <RaisedButton
-                                            label="Voir le plan du lieu"
-                                            labelPosition="before"
-                                            primary={true}
-                                            icon={<MapIcon />}
-                                            onClick={_ => document.getElementById("plan").scrollIntoView()}
-                                        />
-                                    }
-                                </div>
+                                }
                             </div>
-                            <div className="details-block">
-                                <h2>Topics</h2>
-                                <div>
-                                    {
-                                        this.state.stainedGlass.topic.map(topic => <Chip className="path-chip" key={topic}>{topic}</Chip>)
-                                    }
-                                </div>
+                        </div>
+                        <div className="details-block">
+                            <h2>Thèmes</h2>
+                            <div>
+                                {
+                                    this.state.stainedGlass.topic.map(topic => <Chip className="path-chip" key={topic}>{topic}</Chip>)
+                                }
                             </div>
                         </div>
                     </Col>
