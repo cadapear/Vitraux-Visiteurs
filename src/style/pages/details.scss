@@ -8,13 +8,13 @@
   height: 100%;
 }
 
-.stainedGlass-image-container {
+.fullheight-image-container {
   height: 100%;
   text-align: center;
   padding-left: 0 !important;
 }
 
-.stainedGlass-image {
+.fullheight-image {
   max-height: 100%;
   height: auto;
   max-width: 100%;
@@ -28,14 +28,28 @@
     right: 70px;
 }
 
-.details-col {
-    border-right: 1px solid #333;
+.details-col, .stainedGlass-col {
+    background: #FAFAFA;
 }
 
-.details-col-data {
+.stainedGlass-col {
+    padding: 10px;
+}
+
+.details-block {
     padding: 0 10px;
 }
 
-.details-title, .details-block {
+.details-title {
+    background: #26C6DA;
+    padding: 10px;
+    color: #fff;
+}
+
+.details-block {
     padding-top: 20px;
+}
+
+.actions-container > * {
+    margin: 10px 10px 0 0;
 }

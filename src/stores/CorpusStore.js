@@ -60,6 +60,31 @@ class CorpusStore extends BaseStore {
   }
 
   /**
+   * Search the church's plan from a stained glass name
+   * @param {string} stainedGlassName
+   * @return {object|null} 
+   */
+  getChurchPlan(stainedGlassName) {
+      // get the church name. It's the first part of the stainedGlassName : "SNZ" for "SNZ 104" for example
+      const churchName = stainedGlassName.split(' ')[0];
+
+      // gor through topics
+      for (let corpus of this._corpora) {
+          // get the corpus name (first attribute)
+          const corpusName = Object.keys(corpus)[0];
+          // loop through each items of this corpus
+          for (let itemId of Object.keys(corpus[corpusName])) {
+              // check if the name of this item is the church's name
+              if (corpus[corpusName][itemId].name && corpus[corpusName][itemId].name[0] === churchName) {
+                  return corpus[corpusName][itemId];
+              }
+          }
+      }
+
+      return null;
+  }
+
+  /**
    * Search a stained glass in the corpora by id
    * @param {string} id : the stained glass id
    * @return {object|null}
