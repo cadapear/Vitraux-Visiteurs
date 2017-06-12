@@ -156,7 +156,9 @@ export default class Path extends React.Component {
     _findItemInCorpus(item) {
       for (let corpus of this.state.corpora) {
         if (corpus[item.corpus] && corpus[item.corpus][item.id]) {
-          return corpus[item.corpus][item.id];
+          const itemFound = corpus[item.corpus][item.id]
+          itemFound.id = item.id
+          return itemFound;
         }
       }
       return {}
