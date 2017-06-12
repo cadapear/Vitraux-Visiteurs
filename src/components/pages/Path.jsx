@@ -26,7 +26,8 @@ export default class Path extends React.Component {
             upperTopics: [],
             filteredItems: [],
             currentTopicStack: [],
-            snackbar: ""
+            snackbar: "",
+            pathItemsCount: 0
         };
 
         // binding
@@ -47,12 +48,17 @@ export default class Path extends React.Component {
     }
 
     componentDidMount() {
-      // listen the stores changes
-      ViewpointStore.addChangeListener(this._setViewpoints);
-      CorpusStore.addChangeListener(this._setCorpora);
-      // init component data
-      this._setViewpoints();
-      this._setCorpora();
+        this.setState({
+            pathItemsCount: PathHelper.count()
+        });
+
+        // listen the stores changes
+        ViewpointStore.addChangeListener(this._setViewpoints);
+        CorpusStore.addChangeListener(this._setCorpora);
+
+        // init component data
+        this._setViewpoints();
+        this._setCorpora();
     }
 
     componentWillUnmount() {
@@ -114,7 +120,10 @@ export default class Path extends React.Component {
      */
     _addTopicToMyPath(topicId) {
         PathHelper.add(this._getStainedGlasses(topicId))
-            .then(added => this.setState({ snackbar: `${added} ${added > 1 ? " vitraux ajoutés" : " vitrail ajouté"} à votre parcours !` }))
+            .then(added => this.setState({
+                snackbar: `${added} ${added > 1 ? " vitraux ajoutés" : " vitrail ajouté"} à votre parcours !`,
+                pathItemsCount: this.state.pathItemsCount + added
+            }))
             .catch(_ => console.log("Erreur lors de l'ajout des vitraux"));
     }
 
@@ -124,7 +133,10 @@ export default class Path extends React.Component {
      */
     _addStainedGlassToMyPath(item) {
         PathHelper.add([this._findItemInCorpus(item)])
-        .then(added => this.setState({ snackbar: "Vitrail ajouté à votre parcours !" }));
+        .then(added => this.setState({
+            snackbar: "Vitrail ajouté à votre parcours !",
+            pathItemsCount: this.state.pathItemsCount + added
+        }));
     }
 
     /**
@@ -262,7 +274,7 @@ export default class Path extends React.Component {
                 <div className="build-path-header build-path-subcontainer">
                     <Row center="md">
                         <Col xs={12} sm={6} md={3}>
-                            <RaisedButton label="Voir mon parcours" secondary={true} onClick={this._showMyPath} fullWidth={true} />
+                            <RaisedButton label={`Voir mon parcours (${this.state.pathItemsCount})`} secondary={true} onClick={this._showMyPath} fullWidth={true} />
                         </Col>
                         <Col xs={12} sm={6} md={3}>
                             <TextField

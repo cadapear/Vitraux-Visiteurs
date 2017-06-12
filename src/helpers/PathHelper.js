@@ -10,6 +10,14 @@ function read() {
 }
 
 /**
+ * Count the number of stained glasses in path
+ * @return {number}
+ */
+function count() {
+    return read().length;
+}
+
+/**
  * Add these new stainedGlasses to my path
  *
  * @param {array} stainedGlasses : the stainedGlasses to add to my path
@@ -18,6 +26,8 @@ function read() {
 function add(stainedGlasses) {
     return new Promise((resolve, reject) => {
         try {
+            let added = 0;
+
             // read my path in the localStorage
             let current = localStorage.getItem(STORAGE_NAME);
 
@@ -25,18 +35,27 @@ function add(stainedGlasses) {
             current = current ? JSON.parse(current) : [];
 
             // add the stainedGlasses that are not already in it
-            stainedGlasses.map(stainedGlass => !current.includes(stainedGlass) && current.push(stainedGlass));
+            stainedGlasses.map(stainedGlass => {
+                if (!current.filter(c => c.id === stainedGlass.id).length) {
+                    current.push(stainedGlass);
+                    added++;
+                }
+            });
 
             // update my path in the localStorage
             localStorage.setItem(STORAGE_NAME, JSON.stringify(current));
 
-            resolve(stainedGlasses.length);
+            resolve(added);
         } catch(e) {
             reject(e);
         }
     });
 }
 
+/**
+ * Remove an item of the path in the localStorage
+ * @param {string} stainedGlassId : the id of the stained glass to remove
+ */
 function remove(stainedGlassId) {
   // read my path in the localStorage
   let current = localStorage.getItem(STORAGE_NAME);
@@ -46,7 +65,6 @@ function remove(stainedGlassId) {
 
   // remove the stainedGlass which has the id wanted
   const filtered = current.filter(stainedGlass => stainedGlass.id !== stainedGlassId)
-  console.log(filtered)
 
   // update my path in the localStorage
   localStorage.setItem(STORAGE_NAME, JSON.stringify(filtered));
@@ -59,4 +77,4 @@ function clean() {
   localStorage.removeItem(STORAGE_NAME);
 }
 
-export default {add, remove, clean, read};
+export default {add, count, remove, clean, read};
