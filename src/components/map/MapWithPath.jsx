@@ -1,6 +1,11 @@
 import React from 'react'
 import Request from 'request'
-import Chip from 'material-ui/Chip'
+import { Link } from 'react-router-dom'
+import Avatar from 'material-ui/Avatar'
+import { List, ListItem } from 'material-ui/List'
+import { white } from 'material-ui/styles/colors'
+import Clear from 'material-ui/svg-icons/content/clear'
+import PathHelper from '../../helpers/PathHelper'
 
 const getCourseDuration = (total_sec) => {
   var jour = Math.floor(total_sec / (24 * 3600))
@@ -13,12 +18,12 @@ const getCourseDuration = (total_sec) => {
   return heure + ' heures et ' + minute + " minutes"
 }
 
-const chipStyle = {
+const listStyle = {
   position: "fixed",
   bottom: 0,
   zIndex: 1,
-  backgroundColor: "white",
-  left: "40%"
+  left: "40%",
+  backgroundColor: "white"
 }
 
 export default class MapWithPath extends React.Component {
@@ -31,12 +36,15 @@ export default class MapWithPath extends React.Component {
       path: props.path,
       currentPosition: null,
       duration: 0,
-      distance: 0
+      distance: 0,
+      fullListOpen: false
     }
     this._setMarker = this._setMarker.bind(this)
     this._getWaypoints = this._getWaypoints.bind(this)
     this._setRoute = this._setRoute.bind(this)
     this._updateCurrentPosition = this._updateCurrentPosition.bind(this)
+    this._showFullList = this._showFullList.bind(this)
+    this._removeStainedGlass = this._removeStainedGlass.bind(this)
   }
 
   componentWillReceiveProps (nextProps) {
@@ -103,7 +111,7 @@ export default class MapWithPath extends React.Component {
 
     const options = {
       origin: this.state.currentPosition,
-      destination: waypoints[ waypoints.length - 1 ].coordinates,
+      destination: waypoints[ 0 ].coordinates,
       waypoints: waypoints.map(waypoint => ({ location: waypoint.coordinates })),
       travelMode: google.maps.DirectionsTravelMode.WALKING,
       optimizeWaypoints: true
@@ -124,11 +132,29 @@ export default class MapWithPath extends React.Component {
     )
   }
 
+  _showFullList () {
+    this.setState({ fullListOpen: !this.state.fullListOpen })
+  }
+
+  _removeStainedGlass (stainedGlassId) {
+    PathHelper.remove(stainedGlassId)
+  }
+
   render () {
     return (
       <div className="fullheight">
-        <Chip style={chipStyle}>Distance: {Math.ceil(this.state.distance / 1000)} -
-          Durée: {getCourseDuration(this.state.duration)}</Chip>
+        <List style={listStyle}>
+          <ListItem
+            primaryText={`Distance: ${Math.ceil(this.state.distance / 1000)} Km - Durée: ${getCourseDuration(this.state.duration)}`}
+            onClick={this._showFullList}/>
+          {this.state.path && this.state.fullListOpen &&
+          this.state.path.map(element =>
+            <ListItem primaryText={<Link to={`/stained-glass/${element.id}`}>{element.name}</Link>}
+                      leftAvatar={<Avatar src={element.resource[ 0 ]}/>}
+                      rightIcon={<Clear onClick={() => this._removeStainedGlass(element.id)}/>}/>
+          )
+          }
+        </List>
         <div id="map"></div>
       </div>
     )

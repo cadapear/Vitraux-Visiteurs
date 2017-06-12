@@ -28,6 +28,21 @@ function add(stainedGlasses) {
     localStorage.setItem(STORAGE_NAME, JSON.stringify(current));
 }
 
+function remove(stainedGlassId) {
+  // read my path in the localStorage
+  let current = localStorage.getItem(STORAGE_NAME);
+
+  // if there is no path in the localStorage, init it
+  current = current ? JSON.parse(current) : [];
+
+  // remove the stainedGlass which has the id wanted
+  const filtered = current.filter(stainedGlass => stainedGlass.id !== stainedGlassId)
+  console.log(filtered)
+
+  // update my path in the localStorage
+  localStorage.setItem(STORAGE_NAME, JSON.stringify(filtered));
+}
+
 /**
  * Remove my path from the localStorage
  */
@@ -35,4 +50,4 @@ function clean() {
   localStorage.removeItem(STORAGE_NAME);
 }
 
-export default {add, clean, read};
+export default {add, remove, clean, read};
