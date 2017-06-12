@@ -1,4 +1,7 @@
 import React from 'react';
+import { Col } from 'react-flexbox-grid';
+
+import FlatButton from 'material-ui/FlatButton';
 
 export default class PathTopic extends React.Component {
 
@@ -22,14 +25,23 @@ export default class PathTopic extends React.Component {
 
     render() {
         return (
-            <div>
-                <div onClick={this.props.navigate}>
-                    {`${this.state.topic} [${this.state.narrowers}] - (${this.state.items})`}
+            <Col xs={12} sm={6} md={3}>
+                <div className="topic-container">
+                    <div>
+                        <FlatButton
+                            label={`${this.state.topic} ${this.state.narrowers > 0 ? `(${this.state.narrowers})` : ''}`}
+                            onClick={this.props.navigate}
+                            />
+                    </div>
+                    <div>
+                        <FlatButton
+                            label="Ajouter à mon parcours"
+                            secondary={true}
+                            onClick={this.props.addToMyPath}
+                            />
+                    </div>
                 </div>
-                <div onClick={this.props.addToMyPath}>
-                    +
-                </div>
-            </div>
+            </Col>
         );
     }
 

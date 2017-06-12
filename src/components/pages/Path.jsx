@@ -1,4 +1,5 @@
 import React from 'react'
+import { Row, Col } from 'react-flexbox-grid';
 
 import PathHelper from '../../helpers/PathHelper';
 
@@ -211,12 +212,13 @@ export default class Path extends React.Component {
         });
 
         // prepare the topics and stained glasses to display
-        let listItems = [];
+        let topicElements = [];
+        let stainedGlassElements = [];
 
         // if filteredItems is not empty, just display the stainedGlasses in filteredItems
         // else, display the topics tree
         if (filteredItems.length) {
-          listItems = filteredItems.map(item => <PathStainedGlass addToMyPath={_ => this._addStainedGlassToMyPath(item)} key={item.id} id={item.id} name={item.name} />);
+          stainedGlassElements = filteredItems.map(item => <PathStainedGlass addToMyPath={_ => this._addStainedGlassToMyPath(item)} key={item.id} id={item.id} name={item.name} />);
         } else {
           // if there is a currentTopic, display his narrowers topics, and his items
           if (currentTopic) {
@@ -224,36 +226,55 @@ export default class Path extends React.Component {
               const topic = topics[topicId];
               // the topic might not exists
               if (topic) {
-                listItems.push(<PathTopic navigate={_ => this._navigateThoughTopic(topicId)} addToMyPath={_ => this._addTopicToMyPath(topicId)} key={i} topic={topic.name} narrowers={topic.narrowers.length} items={topic.items.length} />)
+                topicElements.push(<PathTopic navigate={_ => this._navigateThoughTopic(topicId)} addToMyPath={_ => this._addTopicToMyPath(topicId)} key={i} topic={topic.name} narrowers={topic.narrowers.length} items={topic.items.length} />)
               }
             })
             topics[currentTopic].items.map((item, i) => {
-              listItems.push(<PathStainedGlass addToMyPath={_ => this._addStainedGlassToMyPath(item)} key={i} id={item.id} name={this._findItemInCorpus(item).name} />)
+              stainedGlassElements.push(<PathStainedGlass addToMyPath={_ => this._addStainedGlassToMyPath(item)} key={i} id={item.id} stainedGlass={this._findItemInCorpus(item)} />)
             })
+
+            // add the "return" button as a topic
+            topicElements.push(<Col xs={12} sm={6} md={3}><div onClick={this._navigateBack} className="goBack-topic">Retour</div></Col>)
           } else {
             // if there is no currentTopic, just display the upper topics
             upperTopics.map((topic, i) => {
-              listItems.push(<PathTopic navigate={_ => this._navigateThoughTopic(topic.id)} addToMyPath={_ => this._addTopicToMyPath(topic.id)} key={i} topic={topic.name} narrowers={topics[topic.id].narrowers.length} items={topics[topic.id].items.length} />)
+              topicElements.push(<PathTopic navigate={_ => this._navigateThoughTopic(topic.id)} addToMyPath={_ => this._addTopicToMyPath(topic.id)} key={i} topic={topic.name} narrowers={topics[topic.id].narrowers.length} items={topics[topic.id].items.length} />)
             })
           }
         }
 
         return (
-            <div>
-                <h1>Création de votre parcours</h1>
-                <RaisedButton label="Voir mon parcours" secondary={true} onClick={this._showMyPath} />
-                <TextField
-                  floatingLabelText="Rechercher par nom"
-                  onChange={this._handleNameInputChange}
-                />
-              {
-                !filteredItems.length &&
-                <div>
-                  <RaisedButton label="Retour" primary={true} onClick={this._navigateBack} />
-                  <TopicBreadcrumb topics={breadcrumb} upTheTree={this._upTheTree} />
+            <div className="build-path-container">
+                <div className="build-path-header build-path-subcontainer">
+                    <Row center="md">
+                        <Col xs={12} sm={6} md={3}>
+                            <RaisedButton label="Voir mon parcours" secondary={true} onClick={this._showMyPath} fullWidth={true} />
+                        </Col>
+                        <Col xs={12} sm={6} md={3}>
+                            <TextField
+                                hintText="Rechercher par nom"
+                                onChange={this._handleNameInputChange}
+                                fullWidth={true}
+                                />
+                        </Col>
+                    </Row>
                 </div>
-              }
-                {listItems}
+                {
+                    !filteredItems.length &&
+                    <div className="shadow-box build-path-subcontainer">
+                        <TopicBreadcrumb topics={breadcrumb} upTheTree={this._upTheTree} />
+                    </div>
+                }
+                <div className="build-path-subcontainer">
+                    <div className="topics-container">
+                        <Row>
+                            {topicElements}
+                        </Row>
+                    </div>
+                    <div className="stainedGlasses-container">
+                        {stainedGlassElements}
+                    </div>
+                </div>
             </div>
         )
     }

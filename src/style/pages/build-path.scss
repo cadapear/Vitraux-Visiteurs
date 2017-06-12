@@ -1,0 +1,80 @@
+.build-path-container {
+    background: #F1F1F1;
+    padding: 10px;
+    min-height: 100%;
+}
+
+.build-path-subcontainer {
+    background: #fff;
+    margin-bottom: 10px;
+    padding: 5px;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
+}
+
+.build-path-header {
+    padding: 10px;
+}
+
+.goBack-topic, .topic-container {
+    text-align: center;
+    padding: 20px 10px;
+    margin: 10px;
+    border-radius: 10px;
+}
+
+.goBack-topic {
+    background: #37474F;
+    color: #fff;
+}
+
+.goBack-topic:hover, .topic-container-title:hover {
+    cursor: pointer;
+}
+
+.topic-container {
+    background: #E5E5E5;
+}
+
+.stainedGlasses-container {
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.stained-glass {
+    height: 140px;
+    padding: 5px 10px;
+    position: relative;
+    margin: 10px 5px;
+    background: #F1F1F1;
+}
+
+.stained-glass > div {
+    vertical-align: top;
+    display: inline-flex;
+}
+
+.stained-glass-image-container {
+    height: 100%;
+    width: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.stained-glass-image {
+    max-height: 100%;
+    height: auto;
+    max-width: 100%;
+    width: auto;
+}
+
+.stained-glass-name {
+
+}
+
+.stained-glass-action {
+    position: absolute;
+    bottom: 5px;
+    right: 10px;
+}

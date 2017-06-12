@@ -14,9 +14,7 @@ const styles = {
   title: {
     cursor: 'pointer',
     color : 'white',
-    fontSize :'35px',
-    fontWeight :'bold'
-
+    fontSize :'35px'
   },
 };
 

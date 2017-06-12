@@ -1,5 +1,7 @@
 import React from 'react';
 
+import FlatButton from 'material-ui/FlatButton';
+
 export default class TopicBreadcrumb extends React.Component {
 
   constructor(props) {
@@ -9,7 +11,6 @@ export default class TopicBreadcrumb extends React.Component {
       topics: props.topics
     }
 
-    this._buildBreadcrumb = this._buildBreadcrumb.bind(this);
     this._upTheTree = this._upTheTree.bind(this);
   }
 
@@ -24,25 +25,15 @@ export default class TopicBreadcrumb extends React.Component {
     this.props.upTheTree(topic);
   }
 
-  /**
-   * Build the topic breadcrumb
-   * Seperate each topic name by ' > '
-   * On click on an item, call the _upTheTree method
-   */
-  _buildBreadcrumb() {
-    let items = [<span key={-1} onClick={_ => this._upTheTree(null)}>/</span>];
-
-    for (let i = 0; i < this.state.topics.length; i++) {
-      items.push(<span key={i} onClick={_ => this._upTheTree(this.state.topics[i].id)}>{" > " + this.state.topics[i].name}</span>)
-    }
-
-    return items;
-  }
-
   render() {
     return (
         <div>
-          {this._buildBreadcrumb()}
+            <FlatButton key={-1} secondary={true} onClick={_ => this._upTheTree(null)} label="/" />
+            {
+                this.state.topics.map((topic, i) => {
+                    return <FlatButton key={i} secondary={true} onClick={_ => this._upTheTree(topic.id)} label={topic.name} />
+                })
+            }
         </div>
     );
   }

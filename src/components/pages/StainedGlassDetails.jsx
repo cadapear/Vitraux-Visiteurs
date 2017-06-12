@@ -73,7 +73,7 @@ export default class stainedGlassDetails extends React.Component {
             <div className="fullheight">
                 <Row className="fullheight-row">
                     <Col xs={12} sm={6} className="details-col">
-                        <h1 className="details-title" id="top">{this.state.stainedGlass.name[0]}</h1>
+                        <h1 className="subtitle" id="top">{this.state.stainedGlass.name[0]}</h1>
                         <div className="go-back-link">
                             <Link to="/stained-glass">Retour aux vitraux</Link>
                         </div>

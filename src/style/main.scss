@@ -1,5 +1,6 @@
 @import "pages/dashboard.scss";
 @import "pages/details.scss";
+@import "pages/build-path.scss";
 
 * {
   font-family: "Roboto";
@@ -56,4 +57,10 @@ html, body {
 
 .progress {
     text-align: center;
+}
+
+.subtitle {
+    background: #26C6DA;
+    padding: 10px 10px 10px 20px;
+    color: #fff;
 }
