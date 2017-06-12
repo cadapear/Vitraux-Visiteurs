@@ -5,6 +5,7 @@ import PathHelper from '../../helpers/PathHelper';
 
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
+import Snackbar from 'material-ui/Snackbar';
 
 import PathTopic from '../Topic/PathTopic.jsx';
 import PathStainedGlass from '../StainedGlass/PathStainedGlass.jsx';
@@ -24,7 +25,8 @@ export default class Path extends React.Component {
             topics: [],
             upperTopics: [],
             filteredItems: [],
-            currentTopicStack: []
+            currentTopicStack: [],
+            snackbar: ""
         };
 
         // binding
@@ -36,6 +38,7 @@ export default class Path extends React.Component {
         this._getStainedGlasses = this._getStainedGlasses.bind(this);
         this._findItemInCorpus = this._findItemInCorpus.bind(this);
         this._upTheTree = this._upTheTree.bind(this);
+        this._hideSnackbar = this._hideSnackbar.bind(this);
 
         this._setViewpoints = this._setViewpoints.bind(this);
         this._setCorpora = this._setCorpora.bind(this);
@@ -110,7 +113,9 @@ export default class Path extends React.Component {
      * @param {string} topicId : the id of a topic
      */
     _addTopicToMyPath(topicId) {
-        PathHelper.add(this._getStainedGlasses(topicId));
+        PathHelper.add(this._getStainedGlasses(topicId))
+            .then(added => this.setState({ snackbar: `${added} ${added > 1 ? " vitraux ajoutés" : " vitrail ajouté"} à votre parcours !` }))
+            .catch(_ => console.log("Erreur lors de l'ajout des vitraux"));
     }
 
     /**
@@ -118,7 +123,8 @@ export default class Path extends React.Component {
      * @param {object} item : the item to add to my path
      */
     _addStainedGlassToMyPath(item) {
-        PathHelper.add([this._findItemInCorpus(item)]);
+        PathHelper.add([this._findItemInCorpus(item)])
+        .then(added => this.setState({ snackbar: "Vitrail ajouté à votre parcours !" }));
     }
 
     /**
@@ -195,6 +201,12 @@ export default class Path extends React.Component {
       this.setState({
         filteredItems: v.length > 1 ? CorpusStore.filterByName(v) : []
       });
+    }
+
+    _hideSnackbar() {
+        this.setState({
+            snackbar: ""
+        });
     }
 
     render() {
@@ -277,6 +289,12 @@ export default class Path extends React.Component {
                         {stainedGlassElements}
                     </div>
                 </div>
+                <Snackbar
+                    open={this.state.snackbar !== ""}
+                    message={this.state.snackbar}
+                    autoHideDuration={4000}
+                    onRequestClose={this._hideSnackbar}
+                    />
             </div>
         )
     }

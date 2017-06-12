@@ -17,7 +17,7 @@ export default class PathStainedGlass extends React.Component {
     componentWillReceiveProps(nextProps) {
         this.setState({
             stainedGlass: nextProps.stainedGlass,
-            id: props.id
+            id: nextProps.id
         });
     }
 
