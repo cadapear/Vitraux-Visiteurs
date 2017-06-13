@@ -38,6 +38,14 @@ html, body {
     }
 }
 
+.appbar-title, .appbar-title:active {
+    color: #fff;
+}
+
+.appbar-title:hover {
+    color: #E5E5E5;
+}
+
 /**
  * Container under the appbar
  */
