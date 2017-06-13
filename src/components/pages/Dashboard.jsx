@@ -1,9 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-
-import RaisedButton from 'material-ui/RaisedButton';
-import ActionAndroid from 'material-ui/svg-icons/action/android';
-import FontIcon from 'material-ui/FontIcon';
 
 import SearchIcon from 'material-ui/svg-icons/action/search';
 import MapIcon from 'material-ui/svg-icons/maps/map';
