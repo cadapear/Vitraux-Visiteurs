@@ -17,7 +17,7 @@ export default class App extends React.Component {
         return (
             <div>
                 <AppBar
-                    title={<Link style={styles.title} to='/'>Vitraux visiteurs</Link>}
+                    title={<Link to='/'>Vitraux visiteurs</Link>}
                     iconElementLeft={<span></span>}
                 />
             <div className="app-container">
