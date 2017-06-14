@@ -1,0 +1,33 @@
+.footer-container {
+    position: absolute;
+    z-index: 5;
+    bottom: 0;
+    background: #fff;
+    width: 100%;
+    padding: 0 10px;
+}
+
+.footer-container.closed {
+    height: 60px;
+    line-height: 60px;
+    vertical-align: middle;
+}
+
+.footer-container.opened {
+    max-height: calc(100% - 100px);
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.toggle-icon {
+    display: inline-block;
+    position: absolute;
+    line-height: 20px;
+    top: 20px;
+    right: 10px;
+}
+
+.toggle-icon:hover {
+    cursor: pointer;
+    color: #26C6DA !important;
+}

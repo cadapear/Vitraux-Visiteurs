@@ -19,3 +19,5 @@ export const APIs = [
     "http://argos2.hypertopic.org",
     "http://steatite.hypertopic.org"
 ];
+
+export const GoogleMapKey = "AIzaSyAtu5-1cj7wJeCiUVC0zhIbWHDtee4fDlo";

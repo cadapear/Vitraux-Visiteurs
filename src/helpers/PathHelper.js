@@ -55,26 +55,39 @@ function add(stainedGlasses) {
 /**
  * Remove an item of the path in the localStorage
  * @param {string} stainedGlassId : the id of the stained glass to remove
+ * @return {Promise}
  */
 function remove(stainedGlassId) {
-  // read my path in the localStorage
-  let current = localStorage.getItem(STORAGE_NAME);
+    return new Promise((resolve, reject) => {
+        try {
+            // read my path in the localStorage
+            let current = localStorage.getItem(STORAGE_NAME);
 
-  // if there is no path in the localStorage, init it
-  current = current ? JSON.parse(current) : [];
+            // if there is no path in the localStorage, init it
+            current = current ? JSON.parse(current) : [];
 
-  // remove the stainedGlass which has the id wanted
-  const filtered = current.filter(stainedGlass => stainedGlass.id !== stainedGlassId)
+            // remove the stainedGlass which has the id wanted
+            const filtered = current.filter(stainedGlass => stainedGlass.id !== stainedGlassId)
 
-  // update my path in the localStorage
-  localStorage.setItem(STORAGE_NAME, JSON.stringify(filtered));
+            // update my path in the localStorage
+            localStorage.setItem(STORAGE_NAME, JSON.stringify(filtered));
+
+            resolve(current);
+        } catch(e) {
+            reject(e);
+        }
+    });
 }
 
 /**
  * Remove my path from the localStorage
+ * @return {Promise}
  */
 function clean() {
-  localStorage.removeItem(STORAGE_NAME);
+    return new Promise((resolve, reject) => {
+        localStorage.removeItem(STORAGE_NAME);
+        resolve([]);
+    });
 }
 
 export default {add, count, remove, clean, read};

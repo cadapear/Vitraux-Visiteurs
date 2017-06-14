@@ -1,163 +1,142 @@
-import React from 'react'
-import Request from 'request'
-import { Link } from 'react-router-dom'
-import Avatar from 'material-ui/Avatar'
-import { List, ListItem } from 'material-ui/List'
-import { white } from 'material-ui/styles/colors'
-import Clear from 'material-ui/svg-icons/content/clear'
-import PathHelper from '../../helpers/PathHelper'
+import React from 'react';
 
-const getCourseDuration = (total_sec) => {
-  var jour = Math.floor(total_sec / (24 * 3600))
-  total_sec = total_sec - (jour * 24 * 3600)
-  var heure = Math.floor(total_sec / 3600)
-  total_sec = total_sec - (heure * 3600)
-  var minute = Math.floor(total_sec / 60)
-  heure = heure + (jour * 24)
+import Request from 'request';
 
-  return heure + ' heures et ' + minute + " minutes"
-}
+import { GoogleMapKey } from '../../config/constants';
 
-const listStyle = {
-  position: "fixed",
-  bottom: 0,
-  zIndex: 1,
-  left: "40%",
-  backgroundColor: "white"
+const getFormattedTime = (secondes) => {
+    let hours = String(Math.floor(secondes / 3600));
+    let minutes = String(Math.floor((secondes % 3600) / 60));
+
+    return `${hours}h${minutes.length === 1 ? "0" : ""}${minutes}`;
 }
 
 export default class MapWithPath extends React.Component {
 
-  constructor (props) {
-    super(props)
+    constructor (props) {
+        super(props)
 
-    this.state = {
-      map: null,
-      path: props.path,
-      currentPosition: null,
-      duration: 0,
-      distance: 0,
-      fullListOpen: false
-    }
-    this._setMarker = this._setMarker.bind(this)
-    this._getWaypoints = this._getWaypoints.bind(this)
-    this._setRoute = this._setRoute.bind(this)
-    this._updateCurrentPosition = this._updateCurrentPosition.bind(this)
-    this._showFullList = this._showFullList.bind(this)
-    this._removeStainedGlass = this._removeStainedGlass.bind(this)
-  }
+        this.state = {
+            map: null,
+            path: props.path,
+            currentPosition: null,
+            duration: 0,
+            distance: 0,
+            fullListOpen: false
+        };
 
-  componentWillReceiveProps (nextProps) {
-    this.setState({ path: nextProps.path })
-  }
-
-  _updateCurrentPosition () {
-    return new Promise((resolve, reject) => navigator.geolocation.getCurrentPosition(pos => {
-      const currentPosition = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude)
-      this.setState({ currentPosition })
-      resolve(pos)
-    }, reject))
-  }
-
-  componentDidMount () {
-    // make a request to geocode to get the coordinates from an address
-    Request(`http://maps.google.com/maps/api/js?language=fr&libraries=places&key=AIzaSyAtu5-1cj7wJeCiUVC0zhIbWHDtee4fDlo`, (error, response, body) => {
-      const TROYES_CENTER = new google.maps.LatLng(48.2973725, 4.0721523)
-      const options = {
-        zoom: 14,
-        mapTypeId: google.maps.MapTypeId.TERRAIN,
-        maxZoom: 20,
-        center: TROYES_CENTER,
-      }
-
-      // init the map
-      const map = new google.maps.Map(document.getElementById('map'), options)
-      return this._updateCurrentPosition()
-        .then(() =>this._getWaypoints(map))
-        .then(waypoints => Promise.all(waypoints.map(waypoint => this._setMarker(map, waypoint)))
-          .then(() => this._setRoute(map, waypoints))
-        )
-        .then(() => this.setState({ map }))
-    })
-  }
-
-  _getWaypoints () {
-    return Promise.all(this.state.path.map(element => {
-      return new Promise((resolve, reject) =>
-        Request(`https://maps.googleapis.com/maps/api/geocode/json?address=${element.spatial[ 0 ]}&key=AIzaSyAtu5-1cj7wJeCiUVC0zhIbWHDtee4fDlo`, (error, response, body) => {
-          resolve({
-            name: element.name[ 0 ],
-            coordinates: JSON.parse(body).results[ 0 ].geometry.location
-          })
-        })
-      )
-    }))
-  }
-
-  _setMarker (map, waypoint) {
-    return new Promise((resolve, reject) => {
-      const marker = new google.maps.Marker({
-        position: waypoint.coordinates,
-        map: map,
-        label: waypoint.name
-      })
-      resolve(marker)
-    })
-  }
-
-  _setRoute (map, waypoints) {
-    const googleDirectionService = new google.maps.DirectionsService()
-    const googleDirectionRenderer = new google.maps.DirectionsRenderer({ map })
-
-    const options = {
-      origin: this.state.currentPosition,
-      destination: waypoints[ 0 ].coordinates,
-      waypoints: waypoints.map(waypoint => ({ location: waypoint.coordinates })),
-      travelMode: google.maps.DirectionsTravelMode.WALKING,
-      optimizeWaypoints: true
+        this._setMarker = this._setMarker.bind(this);
+        this._getWaypoints = this._getWaypoints.bind(this);
+        this._setRoute = this._setRoute.bind(this);
+        this._updateCurrentPosition = this._updateCurrentPosition.bind(this);
+        this._initMap = this._initMap.bind(this);
     }
 
-    return new Promise((resolve, reject) => googleDirectionService.route(options, (direction, requestStatus) => {
-        let duration = 0
-        let distance = 0
-        if (requestStatus == google.maps.DirectionsStatus.OK) {
-          googleDirectionRenderer.setDirections(direction)
-          direction.routes[ 0 ].legs.map(element => {
-            duration += element.duration.value
-            distance += element.distance.value
-          })
-          this.setState({ duration, distance })
-        }
-      })
-    )
-  }
+    componentWillReceiveProps (nextProps) {
+        // continue only if the path has changed
+        if (nextProps.path === this.state.path) return;
 
-  _showFullList () {
-    this.setState({ fullListOpen: !this.state.fullListOpen })
-  }
+        this.setState({ path: nextProps.path });
+        this._initMap();
+    }
 
-  _removeStainedGlass (stainedGlassId) {
-    PathHelper.remove(stainedGlassId)
-  }
+    /**
+     * Init the map
+     */
+    _initMap() {
+        const TROYES_CENTER = new google.maps.LatLng(48.2973725, 4.0721523);
+        const options = {
+            zoom: 14,
+            mapTypeId: google.maps.MapTypeId.TERRAIN,
+            maxZoom: 20,
+            center: TROYES_CENTER,
+        };
 
-  render () {
-    return (
-      <div className="fullheight">
-        <List style={listStyle}>
-          <ListItem
-            primaryText={`Distance: ${Math.ceil(this.state.distance / 1000)} Km - Durée: ${getCourseDuration(this.state.duration)}`}
-            onClick={this._showFullList}/>
-          {this.state.path && this.state.fullListOpen &&
-          this.state.path.map(element =>
-            <ListItem primaryText={<Link to={`/stained-glass/${element.id}`}>{element.name}</Link>}
-                      leftAvatar={<Avatar src={element.resource[ 0 ]}/>}
-                      rightIcon={<Clear onClick={() => this._removeStainedGlass(element.id)}/>}/>
+        // init the map
+        const map = new google.maps.Map(document.getElementById('map'), options);
+        this._updateCurrentPosition()
+          .then(_ => this._getWaypoints())
+          .then(waypoints => Promise.all(waypoints.map(waypoint => this._setMarker(map, waypoint)))
+              .then(_ => this._setRoute(map, waypoints))
           )
-          }
-        </List>
-        <div id="map"></div>
-      </div>
-    )
-  }
+          .then(_ => this.setState({ map }));
+    }
 
-}
+    /**
+    * Update the position of the user on the map
+    */
+    _updateCurrentPosition () {
+        return new Promise((resolve, reject) => navigator.geolocation.getCurrentPosition(pos => {
+            const currentPosition = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude)
+            this.setState({ currentPosition })
+            resolve(pos)
+        }, reject))
+    }
+
+    /**
+     * Format the stained glasses of my path.
+     * Replace each stained glass of my path by a simple object with his name and his coordinates (lat, lng)
+     * @return {array} : formated stained glasses of my path
+     */
+    _getWaypoints () {
+        // loop through path stained glasses
+        return Promise.all(this.state.path.map(stainedGlass => {
+            // get the stained glass coordinates from his string location
+            return new Promise((resolve, reject) => {
+                Request(`https://maps.googleapis.com/maps/api/geocode/json?address=${stainedGlass.spatial[0]}&key=${GoogleMapKey}`, (error, response, body) => {
+                    resolve({
+                        name: stainedGlass.name[0],
+                        coordinates: JSON.parse(body).results[0].geometry.location
+                    })
+                })
+            })
+        }))
+    }
+
+    /**
+     * Create a new Marker on the map
+     * @param {Map} map : the google map
+     * @param {object} waypoint : an object with 2 attributes : name and coordinates (lat and lng)
+     * @return {Marker} the created marker
+     */
+    _setMarker (map, waypoint) {
+        return new google.maps.Marker({
+            position: waypoint.coordinates,
+            map,
+            label: waypoint.name
+        });
+    }
+
+    _setRoute (map, waypoints) {
+        const googleDirectionService = new google.maps.DirectionsService();
+        const googleDirectionRenderer = new google.maps.DirectionsRenderer({ map });
+
+        const options = {
+            origin: this.state.currentPosition,
+            destination: waypoints[ 0 ].coordinates,
+            waypoints: waypoints.map(waypoint => ({ location: waypoint.coordinates })),
+            travelMode: google.maps.DirectionsTravelMode.WALKING,
+            optimizeWaypoints: true
+        };
+
+        return new Promise((resolve, reject) => googleDirectionService.route(options, (direction, requestStatus) => {
+            let duration = 0;
+            let distance = 0;
+            if (requestStatus == google.maps.DirectionsStatus.OK) {
+                googleDirectionRenderer.setDirections(direction);
+                direction.routes[0].legs.map(element => {
+                    duration += element.duration.value
+                    distance += element.distance.value
+                });
+                // send duration and distance to parent
+                this.props.setPathInformation(getFormattedTime(duration), Math.ceil(distance / 1000));
+            }
+        }))
+    }
+
+     render() {
+         return (
+              <div id="map"></div>
+         )
+     }
+ }
