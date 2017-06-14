@@ -107,13 +107,16 @@ export default class MapWithPath extends React.Component {
         });
     }
 
+    /**
+     * Calculate the route to take to vist all the stained glass in my path
+     */
     _setRoute (map, waypoints) {
         const googleDirectionService = new google.maps.DirectionsService();
         const googleDirectionRenderer = new google.maps.DirectionsRenderer({ map });
 
         const options = {
             origin: this.state.currentPosition,
-            destination: waypoints[ 0 ].coordinates,
+            destination: waypoints[0] ? waypoints[0].coordinates : this.state.currentPosition,
             waypoints: waypoints.map(waypoint => ({ location: waypoint.coordinates })),
             travelMode: google.maps.DirectionsTravelMode.WALKING,
             optimizeWaypoints: true
@@ -134,9 +137,9 @@ export default class MapWithPath extends React.Component {
         }))
     }
 
-     render() {
-         return (
-              <div id="map"></div>
-         )
-     }
+    render() {
+        return (
+            <div id="map"></div>
+        )
+    }
  }
